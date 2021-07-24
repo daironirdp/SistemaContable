@@ -116,7 +116,7 @@ require_once '../Modelo/CM_Cuentas.php';
 
 
 
-    </body>
+</body>
 
 
     <footer class="panel-footer page-footer font-small ">
