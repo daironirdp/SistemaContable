@@ -1,0 +1,72 @@
+
+
+
+
+
+.contenedor_cliente{
+    
+    display: flex;
+    justify-content: space-around;
+  
+}
+.icono_user{
+    font-size: 4rem;
+    color:#000;
+}
+#contenedorCuentas th{
+    text-align: center;
+}
+.card{
+    border: 1px solid gray;
+   display: flex;
+   flex-direction: column;
+   background-color: #c0c0c0;
+   border-radius: 5px;
+   width: 200px
+}
+footer {
+   
+   
+    text-align: center;
+    font-size: 1.2rem; 
+
+}
+  
+  footer ul li {
+    text-decoration: none;
+    list-style: none;
+    font-size: 2rem; }
+  
+  footer ul {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
+  
+  footer ul li a {
+  
+    margin-right: 10px; }
+
+
+
+@media only screen and (min-width: 800px) and (max-width: 1500px) {
+    
+
+}
+
+@media only screen and (min-width: 366px) and (max-width: 500px) {
+   
+   
+
+}
+@media only screen and (min-width: 200px) and (max-width: 500px) {
+   
+    
+}
+
+@media only screen and (min-width: 501px) and (max-width: 1500px) {
+   
+   
+}
