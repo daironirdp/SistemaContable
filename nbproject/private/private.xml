@@ -2,6 +2,13 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/xampp/htdocs/sistemaContable/sistemaContable/Modelo/CM_Contabilidad.php</file>
+            <file>file:/C:/xampp/htdocs/sistemaContable/sistemaContable/Vista/paginas/SubPaginas/Detalles_Cliente_Mes.php</file>
+            <file>file:/C:/xampp/htdocs/sistemaContable/sistemaContable/Vista/paginas/SubPaginas/Vista_Comprobantes.php</file>
+            <file>file:/C:/xampp/htdocs/sistemaContable/sistemaContable/Vista/paginas/SubPaginas/Vista_Mayor.php</file>
+            <file>file:/C:/xampp/htdocs/sistemaContable/sistemaContable/Controlador/CC_Controlador.php</file>
+            <file>file:/C:/xampp/htdocs/sistemaContable/sistemaContable/Vista/paginas/SubPaginas/Vista_Contabilidad.php</file>
+        </group>
     </open-files>
 </project-private>

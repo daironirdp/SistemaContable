@@ -5,14 +5,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+/**
+ * Description of CM_Meses
+ *
+ * @author acer
+ */
 include_once '../Modelo/Conexion.php';
 
-class Annos {
+class Meses {
 
     //put your code here
-    //put your code here
     private $id_anno;
-  
 
     function __construct() {
         $a = func_get_args();
@@ -24,9 +28,8 @@ class Annos {
         }
     }
 
-    function __constructArg($id_anno) {
-        $this->nombre = $id_anno;
-       
+    function __constructArg($id_mes) {
+        $this->nombre = $id_mes;
     }
 
     function __constructEmpty() {
@@ -34,8 +37,8 @@ class Annos {
     }
 
     //Obtener todos los annos
-    public function obtenerAnnos() {
-        $sql = "select * from annos";
+    public function obtenerMeses() {
+        $sql = "select * from meses";
         $conexion = new Conexion();
         $annos = $conexion->devolverResultados($sql);
         $conexion->CerrarConexion();
@@ -43,39 +46,28 @@ class Annos {
     }
 
     //inserta un anno en la apk
-    public function insertarAnno($nombre) {
-        $sql = "insert into annos (nombre)values('$nombre')";
+    public function insertarMes($nombre) {
+        $sql = "insert into meses (nombre)values('$nombre')";
         $conexion = new Conexion();
         $conexion->ejecutarConsulta($sql);
 
         $conexion->CerrarConexion();
     }
-
 
     //elimina un anno
-    public function eliminarAnno($id_anno) {
+    public function eliminarMes($id_mes) {
         $conexion = new Conexion();
-        $sql = "DELETE FROM annos where  id_anno='$id_anno'";
+        $sql = "DELETE FROM meses where  id_anno='$id_anno'";
         $conexion->ejecutarConsulta($sql);
         $conexion->CerrarConexion();
     }
 
-    public function encontrarAnno($nombre) {
-        $sql = "select * from annos where nombre='$nombre'";
+    public function encontrarMes($nombre) {
+        $sql = "select * from meses where nombre='$nombre'";
         $conexion = new Conexion();
         $annos = $conexion->devolverResultados($sql);
         $conexion->CerrarConexion();
         return $annos;
-    }
-
-    public function actualizarAnno($id_anno, $nombre) {
-     
-
-            $conexion = new Conexion();
-            $sql = "update  annos set nombre='$nombre' where id_anno='$id_anno'";
-            $conexion->ejecutarConsulta($sql);
-            $conexion->CerrarConexion();
-        
     }
 
 }

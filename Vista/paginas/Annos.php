@@ -61,13 +61,13 @@ $annos = $objeto->obtenerAnnos()
             </tbody>
         </table>
 
-        <form action="../Controlador/CC_Controlador.php?accion=insertarAnno" class="insertar oculto" class="oculto" method="POST">
+        <form action="../Controlador/CC_Controlador.php?accion=insertarAnno" class="insertar oculto" method="POST">
             <input type="number" min="0"name="nombre" value='20<?php echo date("y"); ?>'/>
             <input type="submit"/>
 
         </form>
 
-        <a href="" onclick="modificar(event,'insertar')">Agregar anno</a>
+        <a href="" onclick="insertAnno(event,'insertar')">Agregar anno</a>
     </body>
 </html>
 <style>
@@ -77,7 +77,7 @@ $annos = $objeto->obtenerAnnos()
 </style>
 
 <script>
-    function modificar(e, id) {
+    function insertAnno(e, id) {
         e.preventDefault();
         $("." + id).toggleClass("oculto");
 

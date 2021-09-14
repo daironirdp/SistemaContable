@@ -17,7 +17,7 @@ if ($accion == "insertarCliente") {
     if ($objeto->existeCliente($carnet) == false) {
 
         if ($tipo == 0) {
-            $tipo = "Mini";
+            $tipo = "Micro";
         } else if ($tipo == 1) {
             $tipo = "Carro";
         }
@@ -138,19 +138,78 @@ else if ($accion == "modificarSubCuenta") {
 }
 //insertar un anno dentro de un cliente
 else if ($accion == "insertarAnnoCliente") {
-    
+    require_once '../Modelo/CM_FechaCliente.php';
+    $objeto = new FechaCliente();
+    $objeto->crearFecha($id_mes, $id_anno, $id_cliente, 0, 0, 0);
+    header($plantilla . "3&id_cliente=$id_cliente&$id_anno&nombre_cliente=$nombre_cliente&tipo=$tipo");
 }
 //eliminar anno de un cliente
 else if ($accion == "eliminarAnnoCliente") {
-    
+    require_once '../Modelo/CM_FechaCliente.php';
+    $objeto = new FechaCliente();
+    $objeto->eliminarAnnoParaUnCliente($id_cliente, $id_anno);
+    header($plantilla . "3&id_cliente=$id_cliente&$id_anno&nombre_cliente=$nombre_cliente&tipo=$tipo");
 }
 //insertar mes de un anno de un cliente
 else if ($accion == "insertarMesAnnoCliente") {
-    
+    require_once '../Modelo/CM_FechaCliente.php';
+    $objeto = new FechaCliente();
+    //echo var_dump($_REQUEST);
+    if ($tipo == "micro") {
+        $valor = 750;
+    } else {
+        $valor = 1200;
+    }
+    if ($tipomes == "0") {
+        $impuestos = [
+            ["tipo_impuesto" => "impuesto10%", "tipo_pago" => "$ImpuestoDiez", "valor" => 0,],
+            ["tipo_impuesto" => "cuotaFija", "tipo_pago" => "$CuotaFija", "valor" => $valor,]
+        ];
+    } else {
+        $impuestos = [
+            ["tipo_impuesto" => "impuesto10%", "tipo_pago" => "$ImpuestoDiez", "valor" => 0,],
+            ["tipo_impuesto" => "cuotaFija", "tipo_pago" => "$CuotaFija", "valor" => $valor,],
+            ["tipo_impuesto" => "fuerzaTrabajo", "tipo_pago" => "$FuerzaW", "valor" => $salariotrabajador * 0.05,],
+            ["tipo_impuesto" => "seguridadSocial", "tipo_pago" => "$SeguridadSocial", "valor" => 262.5,]
+        ];
+    }
+
+    $objeto->crearFecha($id_mes, $id_anno, $id_cliente, $tipomes, $salariotrabajador, $impuestos);
+    header($plantilla . "4&id_cliente=$id_cliente&nombre_cliente=$nombre_cliente&tipo=$tipo&nombre_anno=$nombre_anno&id_anno=$id_anno");
 }
 //eliminar mes de un anno de un cliente
 else if ($accion == "eliminarMesAnnoCliente") {
-    
+    require_once '../Modelo/CM_FechaCliente.php';
+    $objeto = new FechaCliente();
+    $objeto->eliminarMesParaUnCliente($id_clienteFecha);
+    header($plantilla . "4&id_cliente=$id_cliente&nombre_cliente=$nombre_cliente&tipo=$tipo&nombre_anno=$nombre_anno&id_anno=$id_anno");
+}
+//
+else if ($accion == "modificarMesAnnoCliente") {
+    require_once '../Modelo/CM_FechaCliente.php';
+    $objeto = new FechaCliente();
+    //echo var_dump($_REQUEST);
+    if ($tipo == "Micro") {
+        $valor = 750;
+    } else {
+        $valor = 1200;
+    }
+    if ($tipomes == "0") {
+        $impuestos = [
+            ["tipo_impuesto" => "impuesto10%", "tipo_pago" => "$ImpuestoDiez", "valor" => 0,],
+            ["tipo_impuesto" => "cuotaFija", "tipo_pago" => "$CuotaFija", "valor" => $valor,]
+        ];
+    } else {
+        $impuestos = [
+            ["tipo_impuesto" => "impuesto10%", "tipo_pago" => "$ImpuestoDiez", "valor" => 0,],
+            ["tipo_impuesto" => "cuotaFija", "tipo_pago" => "$CuotaFija", "valor" => $valor,],
+            ["tipo_impuesto" => "fuerzaTrabajo", "tipo_pago" => "$FuerzaW", "valor" => $salariotrabajador * 0.05,],
+            ["tipo_impuesto" => "seguridadSocial", "tipo_pago" => "$SeguridadSocial", "valor" => 262.5,]
+        ];
+    }
+
+    $objeto->modificarFecha($id_clienteFecha, $tipomes, $salariotrabajador, $impuestos);
+    header($plantilla . "4&id_cliente=$id_cliente&nombre_cliente=$nombre_cliente&tipo=$tipo&nombre_anno=$nombre_anno&id_anno=$id_anno");
 }
 //crear instancia de cuenta
 else if ($accion == "crearInstanciaCuenta") {
@@ -168,11 +227,12 @@ else if ($accion == "crearInstanciaCuenta") {
     if (count($instancias[0]) == 8) {
 
         $id_subcuenta = 0;
-        $objeto->crearInstanciaCuenta($id_cuenta, $id_subcuenta, $valor, $id_clienteFecha, $id_contrapartida, $grupoComprobante, $estado);
+        $objeto->crearInstanciaCuenta($id_cuenta, $id_subcuenta, $valor, $id_clienteFecha, $id_contrapartida, $grupoComprobante, $estado, 'n');
         echo 'ok';
     } else if (count($instancias[0]) > 8) {
         $id_Subcuenta = [];
         $valor_subcuenta = [];
+        $alcance = [];
         if (count($instancias[0]) == 10) {
 
             if ($instancias[0][8] == 1) {
@@ -185,14 +245,16 @@ else if ($accion == "crearInstanciaCuenta") {
             for ($i = 0; $i < count($instancias[0][9]); $i++) {
                 $id_Subcuenta[$i] = $instancias[0][9][$i][0];
                 $valor_subcuenta[$i] = $instancias[0][9][$i][2];
-                $objeto->crearInstanciaCuenta($id_cuenta, $id_Subcuenta[$i], $valor_subcuenta[$i], $id_clienteFecha, $id_contrapartida, $grupoComprobante, $estado);
+                $alcance[$i] = $instancias[0][9][$i][4];
+                $objeto->crearInstanciaCuenta($id_cuenta, $id_Subcuenta[$i], $valor_subcuenta[$i], $id_clienteFecha, $id_contrapartida, $grupoComprobante, $estado, $alcance[$i]);
             }
         } else {
 
             for ($i = 0; $i < count($instancias[0][8]); $i++) {
                 $id_Subcuenta[$i] = $instancias[0][8][$i][0];
                 $valor_subcuenta[$i] = $instancias[0][8][$i][2];
-                $objeto->crearInstanciaCuenta($id_cuenta, $id_Subcuenta[$i], $valor_subcuenta[$i], $id_clienteFecha, $id_contrapartida, $grupoComprobante, $estado);
+                $alcance[$i] = $instancias[0][8][$i][4];
+                $objeto->crearInstanciaCuenta($id_cuenta, $id_Subcuenta[$i], $valor_subcuenta[$i], $id_clienteFecha, $id_contrapartida, $grupoComprobante, $estado, $alcance[$i]);
             }
         }
 
@@ -206,7 +268,7 @@ else if ($accion == "crearInstanciaCuenta") {
     require '../Modelo/CM_Contabilidad.php';
     $objeto = new Contabilidad();
     $objeto->eliminarInstancia($id_cuenta, $id_contrapartida, $id_clienteFecha);
-    header($plantilla . "5&&id_cliente=$id_cliente&&id_anno=$id_anno&&nombre_cliente=$nombre_cliente&&nombre_anno=$nombre_anno&&nombre_mes=$nombre_mes&&id_clienteFecha=$id_clienteFecha&&opcion2=3");
+    header($plantilla . "5&&id_cliente=$id_cliente&&id_anno=$id_anno&&nombre_cliente=$nombre_cliente&&nombre_anno=$nombre_anno&&nombre_mes=$nombre_mes&&id_clienteFecha=$id_clienteFecha&&opcion2=3&tipo=$tipo");
 } else if ($accion == "modificarInstancia") {
 
     require '../Modelo/CM_Contabilidad.php';
@@ -216,12 +278,16 @@ else if ($accion == "crearInstanciaCuenta") {
 } else if ($accion == "modificarInstancias") {
 
     require '../Modelo/CM_Contabilidad.php';
+    require '../Modelo/CM_FechaCliente.php';
     $instancias = json_decode($instancias);
     echo json_encode($instancias);
     $objeto = new Contabilidad;
     foreach ($instancias as $v) {
-        $objeto->modificarInstancias($v[0], $v[1]);
+        $objeto->modificarInstancias($v[0], $v[1], $v[2]);
     }
+    $objeto = new FechaCliente;
+
+    $objeto->actualizarXcientoInjust($extra, $id_clienteFecha);
 }
 //obtener subcuentas de una cuenta
 else if ($accion == "mostrarSubcuetasDeid") {
@@ -230,6 +296,22 @@ else if ($accion == "mostrarSubcuetasDeid") {
     $objeto = new Contabilidad();
 
     echo json_encode($objeto->mostrarSubcuetasDeid($id_cuenta));
+} else if ($accion == "Eliminar") {
+
+    require '../Modelo/CM_Contabilidad.php';
+    $objeto = new Contabilidad();
+    $objeto->eliminarInst($id_instanciaCuenta);
+    header($plantilla . "5&&id_cliente=$id_cliente&&id_anno=$id_anno&&nombre_cliente=$nombre_cliente&&nombre_anno=$nombre_anno&&nombre_mes=$nombre_mes&&id_clienteFecha=$id_clienteFecha&&opcion2=$opcion2&&activa=$activa&&tipo=$tipo");
+}
+//modificar descripcion de comprobante
+else if ($accion == "actualizarDescripcionComprobante") {
+    require '../Modelo/CM_Contabilidad.php';
+    $objeto = new Contabilidad();
+     $instancias = json_decode($instancias);
+   $objeto->ModificarComprobante($id_clienteFecha, $instancias[1],$instancias[0] );
+   
+    echo var_dump($instancias[0]);
+    
 }
 
 //insertar un anno para que este disponible
@@ -274,7 +356,7 @@ else if ($accion == "modificarAnno") {
 else if ($accion == "actualizarAcumulado") {
     require '../Modelo/CM_FechaCliente.php';
     $objeto = new FechaCliente();
-    return $objeto->actualizarAcumulado($acumulado, $id_clienteFecha,$tributo);
+    return $objeto->actualizarAcumulado($acumulado, $id_clienteFecha, $tributo);
 }
 
         

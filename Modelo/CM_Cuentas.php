@@ -10,6 +10,34 @@
 
 class Cuentas {
 
+    private $nombre;
+    private $id_cuenta;
+    private $subcuentas;
+    private $valor;
+    private $tipo;
+
+    function __construct() {
+        $args = func_get_args();
+        $i = func_num_args();
+        if ($i > 0) {
+            call_user_func_array(array($this, '__constructArg'), $args);
+        } else {
+            call_user_func_array(array($this, '__constructEmpty'),$args);
+        }
+    }
+
+    function __constructArg($id_cuenta, $nombre, $subcuentas, $valor, $tipo) {
+        $this->id_cuenta = $id_cuenta;
+        $this->nombre = $nombre;
+        $this->subcuentas = $subcuentas;
+        $this->valor = $valor;
+        $this->tipo = $tipo;
+    }
+
+    function __constructEmpty() {
+        
+    }
+
     //put your code here
 
     function obtenerCuentas() {

@@ -36,7 +36,7 @@ $annosDelCliente = new Annos();
 
                 <div> <label>No carnet: <?php echo $value["carnet"]; ?> </label></div>
                 <div><label>Tipo: <?php echo $value["tipo"]; ?> </label></div>
-              
+
 
             </div>
             <div class="card-footer text-muted">
@@ -52,10 +52,10 @@ $annosDelCliente = new Annos();
                     <label>Tipo</label>
                     <select name="tipo">
                         <option value="0">
-                            mini
+                            Micro
                         </option>
                         <option value="1">
-                            carro
+                            Carro
                         </option>
                     </select>
                     <input type="submit" class="btn-success" value="Insertar">
@@ -80,37 +80,28 @@ $annosDelCliente = new Annos();
     ?>
 
 
-
-
-
-
-
-
-
-
-
 </div>
 <div style="text-align: center">
 
     <a href="#" onclick="insertar(event, 'formInsert')">Agregar</a>
     <div style="display: flex;justify-content: center;" >
-    <form  style="width: 50%"action="../Controlador/CC_Controlador.php?accion=insertarCliente" method="post" id="formInsert" class="oculto form ">
-        <label>Nombre</label>
-        <input type="text" placeholder="nombre aki" class="form-control" name="nombre"/>
-        <label>Carnet</label>
-        <input class="form-control" name="carnet" type="number"/>
-        <label >Tipo</label>
-        <select name="tipo" class="form-control">
-            <option value="0">
-                mini
-            </option>
-            <option value="1">
-                carro
-            </option>
-        </select>
-        <input type="submit" class="btn btn-primary " value="Insertar">
-    </form>
-</div>
+        <form  style="width: 50%"action="../Controlador/CC_Controlador.php?accion=insertarCliente" method="post" id="formInsert" class="oculto form ">
+            <label>Nombre</label>
+            <input type="text" placeholder="nombre aki" class="form-control" name="nombre"/>
+            <label>Carnet</label>
+            <input class="form-control" name="carnet" type="number"/>
+            <label >Tipo</label>
+            <select name="tipo" class="form-control">
+                <option value="0">
+                    Micro
+                </option>
+                <option value="1">
+                    Carro
+                </option>
+            </select>
+            <input type="submit" class="btn btn-primary " value="Insertar">
+        </form>
+    </div>
 </div>
 
 

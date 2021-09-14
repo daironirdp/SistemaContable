@@ -122,37 +122,45 @@ $subcuentas = $objeto->obtenerSubCuentas();
     <body>
 
         <h3>Instancias de Cuentas</h3>
-        <form >
+        <form style="flex: 1 1 0" >
 
 
             <div id="contenedor" style="display: flex;justify-content: space-around;">
 
                 <div id="debe">
                     <h5>Debe</h5>
+
                     <div id="principal">
 
                         <ul id="insertados">
 
                         </ul>
-                        <label>Cuenta</label>
+                        <div class="form-group">
+                            <label for="cuenta">Cuenta</label>
 
-                        <select id="cuenta" onchange="mostrar(event)">
-                            <option class="neutral"value="0">--seleccione--</option>
-                            <?php
-                            foreach ($tipos_cuenta as $tipo) {
+
+                            <select class="form-control"id="cuenta" onchange="mostrar(event)">
+                                <option class="neutral"value="0">--seleccione--</option>
+                                <?php
+                                foreach ($tipos_cuenta as $t) {
+                                    ?>
+                                    <script>
+                                        cuentas.push([<?php echo $t["id_cuenta"]; ?>, '<?php echo $t["nombre_cuenta"] ?>'])
+                                    </script>
+
+                                    <option value="<?php echo $t["id_cuenta"]; ?>"><?php echo $t["nombre_cuenta"] ?></option>
+                                <?php }
                                 ?>
-                                <script>
-                                    cuentas.push([<?php echo $tipo["id_cuenta"]; ?>, '<?php echo $tipo["nombre_cuenta"] ?>'])
-                                </script>
 
-                                <option value="<?php echo $tipo["id_cuenta"]; ?>"><?php echo $tipo["nombre_cuenta"] ?></option>
-                            <?php }
-                            ?>
-                            <script>
+                            </select>
 
-                            </script>
-                        </select>
-                        <input type="number"value="0" id="debeValue" min="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="debeValue">Valor</label>
+                            <input class="form-control" type="number"value="0" id="debeValue" min="0">
+                        </div>
+
 
                     </div>
 
@@ -162,19 +170,20 @@ $subcuentas = $objeto->obtenerSubCuentas();
                         <h4 id="">Subcuentas</h4>
                         <h5 id="subcuentaD"></h5>
                         <ul id="subcuentaInsertadas"></ul>
-                        <label>Cuenta</label>
-                        <select id="subcuenta">
+                        <div class="form-group"> 
+                            <label class="">Cuenta</label>
+                            <select class=" form-control" id="subcuenta">
 
 
-                        </select>
-                        <select id="gastos1" class="esconder">
-                            <option value="1">Justificado</option>
-                            <option value="2">Injustificado</option>
-                            <option value="3">Especial</option>
-                        </select>
-                        <input type="number" value="0" id="valueSub1" >
-                        <button onclick="insertar(event)" id="agregarSub1">Insertar</button>
-
+                            </select>
+                            <select id="gastos1" class="esconder form-control">
+                                <option value="1">Justificado</option>
+                                <option value="2">Injustificado</option>
+                                <option value="3">Especial</option>
+                            </select>
+                            <input class=" form-control"type="number" value="0" id="valueSub1" >
+                            <button onclick="insertar(event)" id="agregarSub1">Insertar</button>
+                        </div>
                     </div>
 
                 </div>
@@ -186,17 +195,23 @@ $subcuentas = $objeto->obtenerSubCuentas();
                         <ul id="insertados2">
 
                         </ul>
-                        <select  id="contrapartida" onchange="mostrar(event)">
-                            <option class="neutral"value="0">--seleccione--</option>
-                            <?php
-                            foreach ($tipos_cuenta as $tipo) {
-                                ?>
+                        <div class="form-group">
+                            <label for="contrapartida">Cuenta</label>
+                            <select class="form-control" id="contrapartida" onchange="mostrar(event)">
+                                <option class="neutral"value="0">--seleccione--</option>
+                                <?php
+                                foreach ($tipos_cuenta as $t) {
+                                    ?>
 
-                                <option value="<?php echo $tipo["id_cuenta"]; ?>"><?php echo $tipo["nombre_cuenta"] ?></option>
-                            <?php }
-                            ?>
-                        </select>
-                        <input type="number" value="0" id="haberValue" min="0">
+                                    <option value="<?php echo $t["id_cuenta"]; ?>"><?php echo $t["nombre_cuenta"] ?></option>
+                                <?php }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="haberValue">Valor</label>
+                            <input class="form-control"type="number" value="0" id="haberValue" min="0"></div>
+
 
                     </div>
 
@@ -204,48 +219,61 @@ $subcuentas = $objeto->obtenerSubCuentas();
                         <h4 id="">Subcuentas</h4>
                         <h5 id="subcuentaD2"></h5>
                         <ul id="subcuentaInsertadas2"></ul>
-                        <label>Cuenta</label>
-                        <select id="subcuenta2">
 
-                        </select>
-                        <select id="gastos2" class="oculto">
-                            <option value="1">Justificado</option>
-                            <option value="2">Injustificado</option>
-                            <option value="3">Especial</option>
-                        </select>
-                        <input type="number" value="0"id="valueSub2" >
-                        <button onclick="insertar(event)" id="agregarSub2">Insertar</button>
+                        <div class="form-group">  
+                            <label>Cuenta</label>
+                            <select class="form-control" id="subcuenta2">
+
+                            </select>
+                            <select class="form-control" id="gastos2" class="oculto">
+                                <option value="1">Justificado</option>
+                                <option value="2">Injustificado</option>
+                                <option value="3">Especial</option>
+                            </select>
+                            <input class="form-control" type="number" value="0"id="valueSub2" >
+                            <button onclick="insertar(event)" id="agregarSub2">Insertar</button>
+                        </div>  
                     </div>
 
 
                 </div>
 
             </div>
-            <select id="grupoComprobante">
-                <option value="1">Comprobante 1</option>
-                <option value="2">Comprobante 2</option>
-                <option value="3">Comprobante 3</option>
-                <option value="4">Comprobante 4</option>
-                <option value="5">Comprobante 5</option>
-                <option value="6">Comprobante 6</option>
-                <option value="7">Comprobante 7</option>
-                <option value="8">Comprobante 8</option>
-                <option value="9">Comprobante 9</option>
-                <option value="10">Comprobante 10</option>
 
-            </select>
+            <div style="display: flex;justify-content: center">
 
-            <select id="estado">
-                <option value="0">Nivel 1 (Diario)</option>
-                <option value="4">Nivel 2 (Comprobantes)</option>
-                <option value="5">Nivel 3 (Mayor)</option>
+                <div class="form-group" style="margin-right: 10px">
+                    <select id="grupoComprobante" class="form-control">
+                        <option value="1">Comprobante 1</option>
+                        <option value="2">Comprobante 2</option>
+                        <option value="3">Comprobante 3</option>
+                        <option value="4">Comprobante 4</option>
+                        <option value="5">Comprobante 5</option>
+                        <option value="6">Comprobante 6</option>
+                        <option value="7">Comprobante 7</option>
+                        <option value="8">Comprobante 8</option>
+                        <option value="9">Comprobante 9</option>
+                        <option value="10">Comprobante 10</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group" style="margin-left: 10px">
+                    <select id="estado" class="form-control">
+                        <option value="0">Nivel 1 (Diario)</option>
+                        <option value="4">Nivel 2 (Comprobantes)</option>
+                        <option value="5">Nivel 3 (Mayor)</option>
 
 
-            </select>
+                    </select>
 
+                </div>
+
+            </div>
 
             <button onclick="insertar(event)" id="i_ingresos">Insertar</button>
-            <a href="?opcion=5&&opcion2=0&&nombre_cliente=<?php echo $nombre_cliente ?>&&nombre_anno=<?php echo $nombre_anno ?>&&nombre_mes=<?php echo $nombre_mes ?>&&id_clienteFecha=<?php echo $id_clienteFecha ?>&&id_cliente=<?php echo $id_cliente ?>&&id_anno=<?php echo $id_anno ?>&&tipo=<?php echo $tipo; ?>" >Generar</a>
+            <a href="?opcion=5&opcion2=0&&nombre_cliente=<?php echo $nombre_cliente ?>&nombre_anno=<?php echo $nombre_anno ?>&nombre_mes=<?php echo $nombre_mes ?>&id_clienteFecha=<?php echo $id_clienteFecha ?>&id_cliente=<?php echo $id_cliente ?>&id_anno=<?php echo $id_anno ?>&tipo=<?php echo $tipo; ?>" >Generar</a>
 
 
 
@@ -278,21 +306,21 @@ $subcuentas = $objeto->obtenerSubCuentas();
 
                 }
                 return dato;
-
+console.log(array);
             }
             function insertar(e) {
                 e.preventDefault();
                 if (e.target == i_ingresos) {
                     var d = buscar(cuentas, $("#cuenta").val(), "cuenta");
                     var h = buscar(cuentas, $("#contrapartida").val(), "cuenta");
-                    $("#insertados2").append("<li>" + $("#contrapartida").val() + "  " + h[1] + "    $ " + $("#haberValue").val() + "<a href='../Controlador/CC_Controlador.php?accion=eliminarInstancia&&id_cliente=<?php echo $id_cliente ?>&&id_anno=<?php echo $id_anno ?>&&nombre_cliente=<?php echo $nombre_cliente ?>&&nombre_anno=<?php echo $nombre_anno ?>&&nombre_mes=<?php echo $nombre_mes ?>&&id_clienteFecha=<?php echo $id_clienteFecha ?>&&opcion2=3&&id_cuenta=" + $("#cuenta").val() + "&&id_contrapartida=" + $("#contrapartida").val() + "'>Eliminar</a> </li>");
+                    $("#insertados2").append("<li id='" + h[1] + $("#haberValue").val() + "'>" + $("#contrapartida").val() + "  " + h[1] + "     " + $("#haberValue").val() + "$  <ul></ul><a href='../Controlador/CC_Controlador.php?accion=eliminarInstancia&tipo=<?php echo $tipo ?>&id_cliente=<?php echo $id_cliente ?>&&id_anno=<?php echo $id_anno ?>&nombre_cliente=<?php echo $nombre_cliente ?>&nombre_anno=<?php echo $nombre_anno ?>&nombre_mes=<?php echo $nombre_mes ?>&id_clienteFecha=<?php echo $id_clienteFecha ?>&opcion2=3&&id_cuenta=" + $("#cuenta").val() + "&id_contrapartida=" + $("#contrapartida").val() + "'>Eliminar</a> </li>");
                     if (subcuenta_insertada.length == 0) {
-                        $("#insertados").append("<li>" + $("#cuenta").val() + "  " + d[1] + "  $ " + $("#debeValue").val() + "</li>");
+                        $("#insertados").append("<li id='" + d[1] + $("#debeValue").val() + "'>" + $("#cuenta").val() + "  " + d[1] + "   " + $("#debeValue").val() + " $<ul></ul></li>");
                         if (subcuenta_insertada2.length == 0) {
                             insertados.push([d[0], d[1], $("#debeValue").val(), h[0], h[1], $("#haberValue").val(), $("#grupoComprobante").val(), $("#estado").val()]);
                         } else {
 
-                            $("#insertados2 li ").replaceWith("<li id='" + h[1] + $("#haberValue").val() + "'>" + $("#contrapartida").val() + "  " + h[1] + "  $ " + $("#haberValue").val() + "      <a href='../Controlador/CC_Controlador.php?accion=eliminarInstancia&&id_cliente=<?php echo $id_cliente ?>&&id_anno=<?php echo $id_anno ?>&&nombre_cliente=<?php echo $nombre_cliente ?>&&nombre_anno=<?php echo $nombre_anno ?>&&nombre_mes=<?php echo $nombre_mes ?>&&id_clienteFecha=<?php echo $id_clienteFecha ?>&&opcion2=3&&id_cuenta=" + $("#cuenta").val() + "&&id_contrapartida=" + $("#contrapartida").val() + "'>Eliminar</a> <ul></ul></li>");
+                            //$("#insertados2 li ").replaceWith("<li id='" + h[1] + $("#haberValue").val() + "'>" + $("#contrapartida").val() + "$  " + h[1] + "   " + $("#haberValue").val() + "  $     <a href='../Controlador/CC_Controlador.php?accion=eliminarInstancia&tipo=<?php echo $tipo ?>&id_cliente=<?php echo $id_cliente ?>&id_anno=<?php echo $id_anno ?>&nombre_cliente=<?php echo $nombre_cliente ?>&nombre_anno=<?php echo $nombre_anno ?>&nombre_mes=<?php echo $nombre_mes ?>&id_clienteFecha=<?php echo $id_clienteFecha ?>&opcion2=3&id_cuenta=" + $("#cuenta").val() + "&id_contrapartida=" + $("#contrapartida").val() + "'>Eliminar</a> <ul></ul></li>");
                             for (var i = 0; i < subcuenta_insertada2.length; i++) {
                                 $("#" + h[1] + $("#haberValue").val() + " ul").append("<li>" + subcuenta_insertada2[i][0] + "  " + subcuenta_insertada2[i][1] + "  $ " + subcuenta_insertada2[i][2] + "</li>")
                             }
@@ -349,7 +377,7 @@ $subcuentas = $objeto->obtenerSubCuentas();
                     $("#haberValue").attr("value", "0");
                     $("#valueSub2").attr("value", "0");
                     $("#valueSub1").attr("value", "0");
-                    EnvioDatosAjax("crearInstanciaCuenta", insertados);
+                    EnvioDatosAjax("crearInstanciaCuenta", insertados,<?php echo $id_clienteFecha; ?>, '<?php echo $nombre_cliente; ?>',<?php echo $nombre_anno; ?>, '<?php echo $nombre_mes; ?>',<?php echo $id_anno; ?>);
 
 
                 } else if (e.target == agregarSub1) {
@@ -357,14 +385,14 @@ $subcuentas = $objeto->obtenerSubCuentas();
                     var d = buscar(subcuentas, $("#subcuenta").val(), "subcuenta");
 
                     $("#subcuentaInsertadas").append("<li>" + $("#subcuenta").val() + " " + d[2] + "    $ " + $("#valueSub1").val() + "</li>");
-                    subcuenta_insertada.push([d[0], d[2], $("#valueSub1").val(), $("#gastos1").val()]);
+                    subcuenta_insertada.push([d[0], d[2], $("#valueSub1").val(), $("#gastos1").val(),'subcuenta1']);
 
                     $("#debeValue").attr("value", parseFloat($("#debeValue").val()) + parseFloat($("#valueSub1").val()));
 
                 } else if (e.target == agregarSub2) {
                     var h = buscar(subcuentas2, $("#subcuenta2").val(), "subcuenta");
                     $("#subcuentaInsertadas2").append("<li>" + $("#subcuenta2").val() + "   " + h[2] + "   $ " + $("#valueSub2").val() + "</li>");
-                    subcuenta_insertada2.push([h[0], h[2], $("#valueSub2").val(), $("#gastos2").val()]);
+                    subcuenta_insertada2.push([h[0], h[2], $("#valueSub2").val(), $("#gastos2").val(),'subcuenta2']);
                     $("#haberValue").attr("value", parseFloat($("#haberValue").val()) + parseFloat($("#valueSub2").val()));
 
                 }
@@ -377,21 +405,7 @@ $subcuentas = $objeto->obtenerSubCuentas();
 
 
 
-            /*  function EnvioDatosAjax(accion, instancias) {
-             
-             
-             $.ajax({
-             type: "POST",
-             url: "../Controlador/CC_Controlador.php?accion=" + accion + "&&id_clienteFecha=<?php echo $id_clienteFecha; ?>",
-             data: {'instancias': JSON.stringify(instancias)},
-             success: function (response) {
-             console.log(insertados);
-             
-             insertados = [];
-             }
-             
-             });
-             }*/
+
 
         </script>
     </body>

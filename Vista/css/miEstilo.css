@@ -1,7 +1,13 @@
 
 
 
-
+.elementosFlexibles1{
+    display: flex;
+    
+}
+.elementosFlexibles2{
+    
+}
 
 .contenedor_cliente{
     
@@ -49,7 +55,9 @@ footer {
   
     margin-right: 10px; }
 
-
+  .fondo td{
+      background-color: aqua !important;
+  }
 
 @media only screen and (min-width: 800px) and (max-width: 1500px) {
     

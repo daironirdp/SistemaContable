@@ -28,7 +28,7 @@ require_once '../Modelo/CM_Cuentas.php';
 
         <script src="js/jquery-3.4.1.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
-        <script src="js/miCodigo.js"></script>
+        
     </head>
     <?php
     $opcion = $_GET['opcion'];
@@ -57,6 +57,8 @@ require_once '../Modelo/CM_Cuentas.php';
             case 5: $page = './paginas/SubPaginas/Vista_Contabilidad.php';
                 $clientes = 'active';
                 break;
+            case 6: $page = './paginas/SubPaginas/fecha/Modificar.php';
+                    break;
             default: $annos = './paginas/error.php';
                 break;
         }
@@ -158,3 +160,5 @@ require_once '../Modelo/CM_Cuentas.php';
     
     </script>
 </html>
+
+<script src="js/miCodigo.js"></script>
