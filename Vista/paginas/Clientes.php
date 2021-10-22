@@ -13,69 +13,73 @@ $annosDelCliente = new Annos();
 //$aki = $valor[0]["id_anno_cliente"];
 //echo $aki;
 //echo $annosDelCliente->obtenerMesesAnnodeUnCliente($aki)[0]["nombre"];
-?>
+if ($valor2 != false) {
+    ?>
 
-<div class="contenedor_cliente">
-
-
-    <?php
-    foreach ($valor2 as $value) {
-        ?>
-
-
-        <div class="card text-center">
-            <div class="card-header">
-                <a href="" class="enlace">
-
-                    <i class=" fa fa-user icono_user" aria-hidden="true"></i>
-                    <label><?php echo $value["nombre"]; ?></label> 
-                </a>
-            </div>
-            <div class="card-body">
-
-
-                <div> <label>No carnet: <?php echo $value["carnet"]; ?> </label></div>
-                <div><label>Tipo: <?php echo $value["tipo"]; ?> </label></div>
-
-
-            </div>
-            <div class="card-footer text-muted">
-                <div> 
-                    <a href="?opcion=3&&id_cliente=<?php echo $value["id_cliente"] ?>&&nombre_cliente=<?php echo $value["nombre"]; ?>&&tipo=<?php echo $value["tipo"]; ?>">Detalles</a>
-                    <a href="#">Modificar</a>
-                    <a href="../Controlador/CC_Controlador.php?accion=eliminarCliente&&id_cliente=<?php echo $value["id_cliente"] ?>">Eliminar</a> </div>
-                <form action="../Controlador/CC_Controlador.php?accion=insertarCliente" method="post" id="" class="oculto">
-                    <label>Nombre</label>
-                    <input type="text" placeholder="nombre aki" name="nombre"/>
-                    <label>Carnet</label>
-                    <input name="carnet" type="number"/>
-                    <label>Tipo</label>
-                    <select name="tipo">
-                        <option value="0">
-                            Micro
-                        </option>
-                        <option value="1">
-                            Carro
-                        </option>
-                    </select>
-                    <input type="submit" class="btn-success" value="Insertar">
-                </form>
-            </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
+    <div class="contenedor_cliente">
 
 
         <?php
+        foreach ($valor2 as $value) {
+            ?>
+
+
+            <div class="card text-center">
+                <div class="card-header">
+                    <a href="" class="enlace">
+
+                        <i class=" fa fa-user icono_user" aria-hidden="true"></i>
+                        <label><?php echo $value["nombre"]; ?></label> 
+                    </a>
+                </div>
+                <div class="card-body">
+
+
+                    <div> <label>No carnet: <?php echo $value["carnet"]; ?> </label></div>
+                    <div><label>Tipo: <?php echo $value["tipo"]; ?> </label></div>
+
+
+                </div>
+                <div class="card-footer text-muted">
+                    <div> 
+                        <a href="?opcion=3&&id_cliente=<?php echo $value["id_cliente"] ?>&&nombre_cliente=<?php echo $value["nombre"]; ?>&&tipo=<?php echo $value["tipo"]; ?>">Detalles</a>
+                        <a href="#">Modificar</a>
+                        <a href="../Controlador/CC_Controlador.php?accion=eliminarCliente&&id_cliente=<?php echo $value["id_cliente"] ?>">Eliminar</a> </div>
+                    <form action="../Controlador/CC_Controlador.php?accion=insertarCliente" method="post" id="" class="oculto">
+                        <label>Nombre</label>
+                        <input type="text" placeholder="nombre aki" name="nombre"/>
+                        <label>Carnet</label>
+                        <input name="carnet" type="number"/>
+                        <label>Tipo</label>
+                        <select name="tipo">
+                            <option value="0">
+                                Micro
+                            </option>
+                            <option value="1">
+                                Carro
+                            </option>
+                        </select>
+                        <input type="submit" class="btn-success" value="Insertar">
+                    </form>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <?php
+        }
+    } else {
+        echo "<h4>No existen clientes en el sistema</h4> ";
     }
     ?>
 
@@ -121,3 +125,6 @@ $annosDelCliente = new Annos();
     }
 
 </script>
+
+<?php
+?>

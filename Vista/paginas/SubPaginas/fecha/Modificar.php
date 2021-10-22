@@ -15,7 +15,7 @@ if ($accion = "modificar") {
 
 
     <div id="insertarFechaNueva">
-        <form action="../Controlador/CC_Controlador.php?accion=modificarMesAnnoCliente" class="insertarMes form"  method="POST">
+        <form action="../Controlador/CC_Controlador.php?accion=modificarMesAnnoCliente" class="insertarMes "  method="POST">
             <h4>Modificando mes de <?php echo $nombre_mes ?></h4>
             <div style="display: flex; justify-content: space-around">
 

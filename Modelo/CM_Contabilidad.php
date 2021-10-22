@@ -28,6 +28,19 @@ class Contabilidad {
         return $instancias;
     }
 
+   function buscar($elemento, $array, $clave) {
+        $pos = 0;
+        $i = 0;
+        while ($i < count($array)) {
+            if ($array[$i][$clave] == $elemento) {
+                $pos = $i;
+                break;
+            }
+            $i++;
+        }
+        return $pos;
+    }
+
     private function existeCuenta($entrega, $cuenta) {
         $pos = -1;
         for ($i = 0; $i < count($entrega); $i++) {
@@ -38,23 +51,53 @@ class Contabilidad {
         return $pos;
     }
 
-    private function saldoAnterior($id_cuenta, $id_clienteFecha) {
-        $sql1 = "SELECT sum(valor) FROM instanciacuenta ic,subcuentas sub,cuentas c "
-                . "WHERE ic.id_clienteFecha='$id_clienteFecha' and"
-                . " c.id_cuenta=ic.id_cuenta and"
-                . " sub.id_subcuenta=ic.id_subcuenta and ic.id_cuenta = '$id_cuenta'";
-
-        $sql2 = "SELECT sum(valor) FROM instanciacuenta ic,subcuentas sub,cuentas c "
-                . "WHERE ic.id_clienteFecha='$id_clienteFecha' and"
-                . " c.id_cuenta=ic.id_cuenta and"
-                . " sub.id_subcuenta=ic.id_subcuenta and ic.contrapartida = '$id_cuenta'";
-        $conexion = new Conexion();
-        $instancias1 = $conexion->devolverResultados($sql1);
-        $instancias2 = $conexion->devolverResultados($sql2);
-        return [$instancias1[0][0], $instancias2[0][0]];
+    public function getSaldoAnterior($id_cuenta, $id_clienteFecha, $tipo) {
+        return $this->saldoAnterior($id_cuenta, $id_clienteFecha, $tipo);
     }
 
-    private function EsSubcuentaDe($id_cuenta, $id_subcuenta) {
+    private function saldoAnterior($id_cuenta, $id_clienteFecha, $tipo) {
+        //calcula el saldo que tuvo una cuenta en el mes anterior tanto por debe como por el haber
+        if ($tipo == "cuenta") {
+            $sql1 = "SELECT sum(valor) FROM instanciacuenta ic,subcuentas sub,cuentas c "
+                    . "WHERE ic.id_clienteFecha='$id_clienteFecha' and"
+                    . " c.id_cuenta=ic.id_cuenta and"
+                    . " sub.id_subcuenta=ic.id_subcuenta and ic.id_cuenta = '$id_cuenta'";
+
+            $sql2 = "SELECT sum(valor) FROM instanciacuenta ic,subcuentas sub,cuentas c "
+                    . "WHERE ic.id_clienteFecha='$id_clienteFecha' and"
+                    . " c.id_cuenta=ic.id_cuenta and"
+                    . " sub.id_subcuenta=ic.id_subcuenta and ic.contrapartida = '$id_cuenta'";
+            $conexion = new Conexion();
+            $instancias1 = $conexion->devolverResultados($sql1);
+            $instancias2 = $conexion->devolverResultados($sql2);
+            return [$instancias1[0][0], $instancias2[0][0]];
+        } else if ($tipo == "subcuenta1") {
+
+            $sql1 = "SELECT sum(valor) FROM instanciacuenta ic,subcuentas sub,cuentas c "
+                    . "WHERE ic.id_clienteFecha='$id_clienteFecha' and"
+                    . " c.id_cuenta=ic.id_cuenta and"
+                    . " sub.id_subcuenta=ic.id_subcuenta and ic.id_subcuenta = '$id_cuenta'";
+
+
+            $conexion = new Conexion();
+            $instancias1 = $conexion->devolverResultados($sql1);
+            ///arreglar esto
+            return [$instancias1[0][0], 0];
+        } else if ($tipo == "subcuenta2") {
+            $sql2 = "SELECT sum(valor) FROM instanciacuenta ic,subcuentas sub,cuentas c "
+                    . "WHERE ic.id_clienteFecha='$id_clienteFecha' and"
+                    . " c.id_cuenta=ic.id_cuenta and"
+                    . " sub.id_subcuenta=ic.id_subcuenta and ic.contrapartida = c.id_cuenta and "
+                    . "ic.id_subcuenta = '$id_cuenta'";
+            $conexion = new Conexion();
+            $instancias1 = $conexion->devolverResultados($sql2);
+            ///arreglar esto
+            return [0, $instancias1[0][0]];
+        }
+    }
+
+    function EsSubcuentaDe($id_cuenta, $id_subcuenta) {
+        //verifica que sea una subcuenta de una cuenta determinada
         $sql = "SELECT id_cuenta FROM subcuentas  "
                 . "WHERE id_subcuenta='$id_subcuenta'";
         $conexion = new Conexion();
@@ -71,10 +114,162 @@ class Contabilidad {
                 . "WHERE id_cuenta='$id_cuenta'";
         $conexion = new Conexion();
         $instancia = $conexion->devolverResultados($sql);
+
+        if ($instancia == false) {
+            $sql = "SELECT nombre_subcuenta FROM subcuentas  "
+                    . "WHERE id_subcuenta='$id_cuenta'";
+
+            $instancia = $conexion->devolverResultados($sql);
+        }
+
+
         return $instancia;
     }
 
-    function obtenerInstanciasMayor($id_clienteFecha, $id_clienteFecha2) {
+    private function obtenerNaturalezaCuenta($id_cuenta) {
+        $sql = "SELECT naturaleza FROM cuentas  "
+                . "WHERE id_cuenta='$id_cuenta'";
+        $conexion = new Conexion();
+        $instancia = $conexion->devolverResultados($sql);
+        if ($instancia == false) {
+            $sql = "SELECT naturaleza FROM subcuentas  "
+                    . "WHERE id_subcuenta='$id_cuenta'";
+
+            $instancia = $conexion->devolverResultados($sql);
+        }
+        return $instancia;
+    }
+
+    function esTrimestral($id_clienteFecha) {
+        $sql = "Select id_mes "
+                . "from clientefecha cf"
+                . " where cf.id_clienteFecha='$id_clienteFecha'";
+        $conexion = new Conexion();
+
+        $instancia = $conexion->devolverResultados($sql);
+        if ($instancia[0]['id_mes'] == 3 || $instancia[0]['id_mes'] == 6 || $instancia[0]['id_mes'] == 9 || $instancia[0]['id_mes'] == 12) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function crearInstanciaMayor($id_cuenta, $id_clienteFecha, $saldo_final, $id_subcuenta, $tipo) {
+        $conexion = new Conexion();
+
+        $sql = "SELECT saldo_final FROM instanciamayor  "
+                . "WHERE id_cuenta='$id_cuenta' and "
+                . "id_clienteFecha='$id_clienteFecha' "
+                . "and id_subcuenta='$id_subcuenta' ";
+        $instancia = $conexion->devolverResultados($sql);
+        if ($instancia == false) {
+            $sql = "INSERT INTO instanciamayor (id_cuenta,id_clienteFecha,saldo_final,id_subcuenta)"
+                    . " VALUES ('$id_cuenta','$id_clienteFecha','$saldo_final','$id_subcuenta')";
+
+            $conexion->ejecutarConsulta($sql);
+        } else {
+
+            if ($saldo_final != $instancia[0][0]) {
+
+                $sql = "UPDATE instanciamayor SET saldo_final='$saldo_final' "
+                        . "WHERE id_cuenta='$id_cuenta' and id_subcuenta='$id_subcuenta' and id_clienteFecha='$id_clienteFecha' ";
+                $conexion->ejecutarConsulta($sql);
+            }
+        }
+        $conexion->CerrarConexion();
+    }
+
+    function obtenerSaldoAnterior($id_cuenta, $id_clienteFecha, $id_subcuenta) {
+
+        $conexion = new Conexion();
+        $sql = "SELECT saldo_final FROM instanciamayor  "
+                . "WHERE id_cuenta='$id_cuenta' and "
+                . "id_clienteFecha='$id_clienteFecha' "
+                . "and id_subcuenta='$id_subcuenta' ";
+
+        $instancia = $conexion->devolverResultados($sql);
+        if ($instancia != false) {
+            return $instancia[0][0];
+        } else {
+            return $instancia;
+        }
+    }
+
+    function depuradorMayor($libroMayor, $id_clienteFecha) {
+
+        $sql = "SELECT saldo_final,id_cuenta,id_subcuenta FROM instanciamayor  "
+                . "WHERE id_clienteFecha='$id_clienteFecha' ";
+        $conexion = new Conexion();
+        $instancias_anterior = $conexion->devolverResultados($sql);
+        if ($instancias_anterior != false) {
+            foreach ($instancias_anterior as $vIa) {
+
+                if (is_numeric(array_search($vIa["id_cuenta"], array_column($libroMayor, 'id_cuenta')))) {
+
+
+                    if ($vIa["id_subcuenta"] != 0) {
+
+                        $pos = array_search($vIa["id_cuenta"], array_column($libroMayor, 'id_cuenta'));
+                        if (!is_numeric(array_search($vIa["id_subcuenta"], array_column($libroMayor[$pos]['subcuentas'], 'id_subcuenta')))) {
+
+                            if ($this->EsSubcuentaDe($vIa["id_cuenta"], $vIa["id_subcuenta"])) {
+                                array_push($libroMayor[$pos]['subcuentas'], [
+                                    'id_subcuenta' => $vIa["id_subcuenta"],
+                                    'valor' => 0,
+                                    'nombre_subcuenta' => $this->obtenerNombreCuenta($vIa["id_subcuenta"])[0][0],
+                                    'saldoAnterior' => $vIa["saldo_final"]
+                                        ]
+                                );
+
+                                $libroMayor[$pos]["saldoAnterior"] += $vIa["saldo_final"];
+                            }
+                        } else {
+                            $pos2 = array_search($vIa["id_subcuenta"], array_column($libroMayor[$pos]['subcuentas'], 'id_subcuenta'));
+                            $libroMayor[$pos]['subcuentas'][$pos2]['saldoAnterior'] = $vIa['saldo_final'];
+                            $libroMayor[$pos]["saldoAnterior"] += $vIa["saldo_final"];
+                        }
+                    } else {
+                        $pos = array_search($vIa["id_cuenta"], array_column($libroMayor, 'id_cuenta'));
+                        $libroMayor[$pos]['saldoAnterior'] = $vIa['saldo_final'];
+                    }
+                } else {
+
+
+                    if ($vIa["id_subcuenta"] != 0) {
+
+
+                        array_push($libroMayor, [
+                            'id_cuenta' => $vIa["id_cuenta"],
+                            'nombre' => $this->obtenerNombreCuenta($vIa["id_cuenta"])[0][0],
+                            'debe' => 0,
+                            'haber' => 0,
+                            'clasificacion' => $this->obtenerNaturalezaCuenta($vIa["id_cuenta"])[0][0],
+                            'saldoAnterior' => $vIa["saldo_final"],
+                            'subcuentas' => [
+                                ['id_subcuenta' => $vIa["id_subcuenta"],
+                                    'valor' => 0,
+                                    'nombre_subcuenta' => $this->obtenerNombreCuenta($vIa["id_subcuenta"][0][0]),
+                                    'saldoAnterior' => $vIa["saldo_final"]
+                                ]
+                            ]
+                        ]);
+                    } else {
+                        array_push($libroMayor, [
+                            'id_cuenta' => $vIa["id_cuenta"],
+                            'nombre' => $this->obtenerNombreCuenta($vIa["id_cuenta"])[0][0],
+                            'debe' => 0,
+                            'haber' => 0,
+                            'clasificacion' => $this->obtenerNaturalezaCuenta($vIa["id_cuenta"])[0][0],
+                            'saldoAnterior' => $vIa["saldo_final"],
+                            'subcuentas' => 0]);
+                    }
+                }
+            }
+        }
+        return $libroMayor;
+    }
+
+    function obtenerInstanciasMayor($id_clienteFecha, $id_clienteFecha2, $tipo) {
 
         $sql = "SELECT * FROM instanciacuenta ic,subcuentas sub,cuentas c "
                 . "WHERE ic.id_clienteFecha='$id_clienteFecha' and"
@@ -91,9 +286,13 @@ class Contabilidad {
 
             if ($this->existeCuenta($entrega, $instancias1[$k]['id_cuenta']) == -1) {
                 if ($id_clienteFecha2 != 0) {
-                    $saldoAnterior = $this->saldoAnterior($instancias1[$k]['id_cuenta'], $id_clienteFecha2);
+                    //$saldoAnterior = $this->saldoAnterior($instancias1[$k]['id_cuenta'], $id_clienteFecha2, 'cuenta');
+                    //$saldoAnteriorSubcuenta = $this->saldoAnterior($instancias1[$k]['id_subcuenta'], $id_clienteFecha2, 'subcuenta1');
+                    $saldoAnterior = ($this->obtenerSaldoAnterior($instancias1[$k]['id_cuenta'], $id_clienteFecha2, '0'));
+                    $saldoAnteriorSubcuenta = $this->obtenerSaldoAnterior($instancias1[$k]['id_cuenta'], $id_clienteFecha2, $instancias1[$k]['id_subcuenta']);
                 } else {
                     $saldoAnterior = 0;
+                    $saldoAnteriorSubcuenta = 0;
                 }
 
 
@@ -104,19 +303,20 @@ class Contabilidad {
                         'nombre' => $instancias1[$k]['nombre_cuenta'],
                         'debe' => $instancias1[$k]['valor'],
                         'haber' => 0,
-                        'clasificacion' => '',
+                        'clasificacion' => $instancias1[$k]['naturaleza'],
                         'saldoAnterior' => $saldoAnterior,
                         'subcuentas' => [
                             ['id_subcuenta' => $instancias1[$k]['id_subcuenta'],
                                 'valor' => $instancias1[$k]['valor'],
-                                'nombre_subcuenta' => $instancias1[$k]['nombre_subcuenta']]]]);
+                                'nombre_subcuenta' => $instancias1[$k]['nombre_subcuenta'],
+                                'saldoAnterior' => $saldoAnteriorSubcuenta,]]]);
                 } else {
                     array_push($entrega, [
                         'id_cuenta' => $instancias1[$k]['id_cuenta'],
                         'nombre' => $instancias1[$k]['nombre_cuenta'],
                         'debe' => $instancias1[$k]['valor'],
                         'haber' => 0,
-                        'clasificacion' => '',
+                        'clasificacion' => $instancias1[$k]['naturaleza'],
                         'saldoAnterior' => $saldoAnterior,
                         'subcuentas' => 0]);
                 }
@@ -124,54 +324,89 @@ class Contabilidad {
                 $pos1 = $this->existeCuenta($entrega, $instancias1[$k]['id_cuenta']);
                 $entrega[$pos1]['debe'] += $instancias1[$k]['valor'];
                 if ($this->EsSubcuentaDe($instancias1[$k]['id_cuenta'], $instancias1[$k]['id_subcuenta'])) {
+                    if ($id_clienteFecha2 != 0) {
+                        // $saldoAnteriorSubcuenta = $this->saldoAnterior($instancias1[$k]['id_subcuenta'], $id_clienteFecha2, 'subcuenta1');
+                        $saldoAnteriorSubcuenta = $this->obtenerSaldoAnterior($instancias1[$k]['id_cuenta'], $id_clienteFecha2, $instancias1[$k]['id_subcuenta'])[0];
+                    } else {
+                        $saldoAnteriorSubcuenta = 0;
+                    }
                     array_push($entrega[$pos1]['subcuentas'],
-                            ['id_subcuenta' => $instancias1[$k]['id_subcuenta'],
+                            [
+                                'id_subcuenta' => $instancias1[$k]['id_subcuenta'],
                                 'valor' => $instancias1[$k]['valor'],
                                 'nombre_subcuenta' => $instancias1[$k]['nombre_subcuenta'],
-                                'saldoAnterior' => 0]);
+                                'saldoAnterior' => $saldoAnteriorSubcuenta]);
                 }
             }
 
             if ($this->existeCuenta($entrega, $instancias1[$k]['contrapartida']) == -1) {
                 if ($id_clienteFecha2 != 0) {
-                    $saldoAnterior2 = $this->saldoAnterior($instancias1[$k]['contrapartida'], $id_clienteFecha2);
+                    //$saldoAnterior2 = $this->saldoAnterior($instancias1[$k]['contrapartida'], $id_clienteFecha2, 'cuenta');
+                    //$saldoAnteriorSubcuenta2 = $this->saldoAnterior($instancias1[$k]['id_subcuenta'], $id_clienteFecha2, 'subcuenta2');
+                    $saldoAnterior2 = $this->obtenerSaldoAnterior($instancias1[$k]['contrapartida'], $id_clienteFecha2, $instancias1[$k]['id_subcuenta']);
+                    $saldoAnteriorSubcuenta2 = $this->obtenerSaldoAnterior($instancias1[$k]['contrapartida'], $id_clienteFecha2, $instancias1[$k]['id_subcuenta']);
                 } else {
                     $saldoAnterior2 = 0;
+                    $saldoAnteriorSubcuenta2 = 0;
                 }
 
                 $nombre = $this->obtenerNombreCuenta($instancias1[$k]['contrapartida'])[0][0];
                 if ($this->EsSubcuentaDe($instancias1[$k]['contrapartida'], $instancias1[$k]['id_subcuenta'])) {
+                    $debe = 0;
+                    if ($instancias1[$k]['contrapartida'] == '600') {
+                        if ($tipo == "Micro") {
+                            $debe = 750;
+                        } else {
+                            $debe = 1200;
+                        }
+
+                        if ($this->esTrimestral($id_clienteFecha)) {
+                            $debe += 262.5;
+                        }
+                    }
+
 
                     array_push($entrega, [
                         'id_cuenta' => $instancias1[$k]['contrapartida'],
                         'nombre' => $nombre,
-                        'debe' => 0,
+                        'debe' => $debe,
                         'haber' => $instancias1[$k]['valor'],
-                        'clasificacion' => '',
+                        'clasificacion' => $instancias1[$k]['naturaleza'],
                         'saldoAnterior' => $saldoAnterior2,
                         'subcuentas' => [
                             ['id_subcuenta' => $instancias1[$k]['id_subcuenta'],
                                 'valor' => $instancias1[$k]['valor'],
-                                'nombre_subcuenta' => $instancias1[$k]['nombre_subcuenta']]]]);
+                                'nombre_subcuenta' => $instancias1[$k]['nombre_subcuenta'],
+                                'saldoAnterior' => $saldoAnteriorSubcuenta2]]]);
                 } else {
                     array_push($entrega, [
                         'id_cuenta' => $instancias1[$k]['contrapartida'],
                         'nombre' => $nombre,
                         'debe' => 0,
                         'haber' => $instancias1[$k]['valor'],
-                        'clasificacion' => '',
+                        'clasificacion' => $instancias1[$k]['naturaleza'],
                         'saldoAnterior' => $saldoAnterior2,
                         'subcuentas' => 0]);
                 }
             } else {
+
                 $pos2 = $this->existeCuenta($entrega, $instancias1[$k]['contrapartida']);
                 $entrega[$pos2]['haber'] += $instancias1[$k]['valor'];
                 if ($this->EsSubcuentaDe($instancias1[$k]['contrapartida'], $instancias1[$k]['id_subcuenta'])) {
+
+                    if ($id_clienteFecha2 != 0) {
+
+                        $saldoAnteriorSubcuenta2 = $this->saldoAnterior($instancias1[$k]['id_subcuenta'], $id_clienteFecha2, 'subcuenta2')[0];
+                        //$saldoAnteriorSubcuenta2 = $this->obtenerSaldoAnterior($instancias1[$k]['contrapartida'], $id_clienteFecha2, $instancias1[$k]['id_subcuenta']);
+                    } else {
+
+                        $saldoAnteriorSubcuenta2 = 0;
+                    }
                     array_push($entrega[$pos2]['subcuentas'],
                             ['id_subcuenta' => $instancias1[$k]['id_subcuenta'],
                                 'valor' => $instancias1[$k]['valor'],
                                 'nombre_subcuenta' => $instancias1[$k]['nombre_subcuenta'],
-                                'saldoAnterior' => 0]);
+                                'saldoAnterior' => $saldoAnteriorSubcuenta2]);
                 }
             }
         }
@@ -217,7 +452,7 @@ class Contabilidad {
                         $pos++;
                     } else {
 
-                        if (!is_numeric(array_search('800', array_column($array_pos, 'id')))) {
+                        if (!is_numeric(array_search($instancia['contrapartida'], array_column($array_pos, 'contrapartida'))) && !is_numeric(array_search('800', array_column($array_pos, 'id')))) {
 
                             array_push($aux, ['id_cuenta' => $instancia['id_cuenta'],
                                 'nombre_cuenta' => $instancia['nombre_cuenta'],
@@ -228,23 +463,56 @@ class Contabilidad {
                                 'valor' => $instancia['valor'],
                                 'alcance' => $instancia['alcance']]]]);
                             array_push($array_pos, ['id' => $instancia['id_cuenta'],
-                                'pos' => $pos]);
+                                'pos' => $pos, 'contrapartida' => $instancia['contrapartida']]);
                             $pos++;
                         } else {
+
 
                             for ($k = 0; $k < count($array_pos); $k++) {
                                 if ($array_pos[$k]['id'] == $instancia['id_cuenta']) {
                                     $valor = $array_pos[$k]['pos'];
+                                } else {
+                                    $valor = -1;
                                 }
                             }
+
                             //agregarle una subcuenta
-                            array_push($aux[$valor]['subcuentas'],
-                                    ['id_subcuenta' => $instancia['id_subcuenta'],
+                            if ($valor != -1) {
+                                if ($aux[$valor]['contrapartida'] == $instancia['contrapartida']) {
+                                    array_push($aux[$valor]['subcuentas'],
+                                            ['id_subcuenta' => $instancia['id_subcuenta'],
+                                                'nombre_subcuenta' => $instancia['nombre_subcuenta'],
+                                                'valor' => $instancia['valor'],
+                                                'alcance' => $instancia['alcance']]);
+                                    //sumarle el valor
+
+                                    $aux[$valor]['valor'] += $instancia['valor'];
+                                } else {
+                                    array_push($aux, ['id_cuenta' => $instancia['id_cuenta'],
+                                        'nombre_cuenta' => $instancia['nombre_cuenta'],
+                                        'contrapartida' => $instancia['contrapartida'],
+                                        'valor' => $instancia['valor'],
+                                        'subcuentas' => [['id_subcuenta' => $instancia['id_subcuenta'],
                                         'nombre_subcuenta' => $instancia['nombre_subcuenta'],
                                         'valor' => $instancia['valor'],
-                                        'alcance' => $instancia['alcance']]);
-                            //sumarle el valor
-                            $aux[$valor]['valor'] += $instancia['valor'];
+                                        'alcance' => $instancia['alcance']]]]);
+                                    array_push($array_pos, ['id' => $instancia['id_cuenta'],
+                                        'pos' => $pos, 'contrapartida' => $instancia['contrapartida']]);
+                                    $pos++;
+                                }
+                            } else {
+                                array_push($aux, ['id_cuenta' => $instancia['id_cuenta'],
+                                    'nombre_cuenta' => $instancia['nombre_cuenta'],
+                                    'contrapartida' => $instancia['contrapartida'],
+                                    'valor' => $instancia['valor'],
+                                    'subcuentas' => [['id_subcuenta' => $instancia['id_subcuenta'],
+                                    'nombre_subcuenta' => $instancia['nombre_subcuenta'],
+                                    'valor' => $instancia['valor'],
+                                    'alcance' => $instancia['alcance']]]]);
+                                array_push($array_pos, ['id' => $instancia['id_cuenta'],
+                                    'pos' => $pos, 'contrapartida' => $instancia['contrapartida']]);
+                                $pos++;
+                            }
                         }
                     }
                 }
@@ -259,7 +527,16 @@ class Contabilidad {
     }
 
     function ExisteComprobante($id_clienteFecha, $grupoComprobante) {
-        $sql = "select * from comprobantes where id_clienteFecha = '$id_clienteFecha' and grupoComprobante = '$grupoComprobante'";
+        $sql = "select * from comprobantes where id_clienteFecha = '$id_clienteFecha' and grupo_comprobante = '$grupoComprobante'";
+        $conexion = new Conexion();
+        $instancias = $conexion->devolverResultados($sql);
+        $conexion->CerrarConexion();
+        return $instancias;
+    }
+
+    function ExisteInstancia($id_clienteFecha, $cuenta) {
+        $sql = "select * from instanciacuenta "
+                . "where id_clienteFecha = '$id_clienteFecha' and id_subcuenta = '$cuenta'";
         $conexion = new Conexion();
         $instancias = $conexion->devolverResultados($sql);
         $conexion->CerrarConexion();
@@ -284,6 +561,16 @@ class Contabilidad {
         $conexion->CerrarConexion();
     }
 
+    function crearComprobante($id_clienteFecha, $grupoComprobante) {
+        if (!$this->ExisteComprobante($id_clienteFecha, $grupoComprobante) != false) {
+            $sql = "Insert into comprobantes (descripcion,id_clienteFecha,grupo_comprobante)"
+                    . " values('','$id_clienteFecha','$grupoComprobante')";
+            $conexion = new Conexion();
+            $conexion->ejecutarConsulta($sql);
+            $conexion->CerrarConexion();
+        }
+    }
+
     function crearInstanciaCuenta($id_cuenta, $id_subcuenta, $valor, $id_clienteFecha, $id_contrapartida, $grupoComprobante, $estado, $alcance) {
 
         $sql = "Insert into instanciacuenta (id_cuenta,id_subcuenta,valor,id_clienteFecha,contrapartida,grupoComprobante,estado,alcance)"
@@ -292,9 +579,18 @@ class Contabilidad {
         $conexion = new Conexion();
         $instancias = $conexion->ejecutarConsulta($sql);
 
-        if (!$this->ExisteComprobante($id_clienteFecha, $grupoComprobante) != false) {
-            $sql = "Insert into comprobantes (descripcion,id_clienteFecha,grupo_comprobante)"
-                    . " values('','$id_clienteFecha',$grupoComprobante')";
+//Crear comprobante 
+        $this->crearComprobante($id_clienteFecha, $grupoComprobante);
+
+        if (!$this->ExisteInstancia($id_clienteFecha, '90') != false) {
+            $sql = "SELECT salariotrabajador FROM clientefecha  where"
+                    . " id_clienteFecha='$id_clienteFecha' ";
+            $valor = $conexion->devolverResultados($sql);
+            $valor = $valor[0][0];
+
+            $sql2 = "Insert into instanciacuenta (id_cuenta,id_subcuenta,valor,id_clienteFecha,contrapartida,grupoComprobante,estado,alcance)"
+                    . " values('800','90','$valor','$id_clienteFecha','100','1','1','subcuenta1')";
+            $conexion->ejecutarConsulta($sql2);
         }
         $conexion->CerrarConexion();
         return $instancias;

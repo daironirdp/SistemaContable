@@ -17,6 +17,8 @@ $disponibles = $disponibles->obtenerAnnos();
 $objeto = new FechaCliente();
 $annos = $objeto->mostrarAnnos($id_cliente);
 $meses = $meses->obtenerMeses();
+
+
 ?>
 
 <html>
@@ -61,8 +63,10 @@ $meses = $meses->obtenerMeses();
             }
             ?>
         </div>
-        <form action="../Controlador/CC_Controlador.php?accion=insertarAnnoCliente" class="insertarAnno oculto"  method="POST">
-            <select name="id_anno">
+        <form action="../Controlador/CC_Controlador.php?accion=insertarAnnoCliente" class="insertarAnno oculto form"  method="POST">
+            <div class="form-group">
+                
+                <select class="form-control" name="id_anno">
                 <?php foreach ($disponibles as $d) {
                     ?>
                     <option value="<?php echo $d["id_anno"] ?>">
@@ -73,8 +77,7 @@ $meses = $meses->obtenerMeses();
                 <?php } ?>
 
             </select>
-
-            <select name="id_mes">
+                  <select class="form-control" name="id_mes">
                 <?php foreach ($meses as $m) {
                     ?>
                     <option value="<?php echo $m["id_mes"] ?>">
@@ -85,10 +88,17 @@ $meses = $meses->obtenerMeses();
                 <?php } ?>
 
             </select>
-            <input hidden name="id_cliente"value="<?php echo $id_cliente ?>">
+            </div>
+           
+          
+           
+<div class="form-group">
+      <input hidden name="id_cliente"value="<?php echo $id_cliente ?>">
             <input hidden name="nombre_cliente"value="<?php echo $nombre_cliente ?>">
             <input hidden name="tipo"value="<?php echo $tipo ?>">
-            <input type="submit"/>
+            <input class="btn btn-primary" type="submit"/>
+</div>
+            
 
         </form>
         <style>

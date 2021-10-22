@@ -125,7 +125,7 @@ function actualizarEstado(id) {
             $("#utilidadPerdida").replaceWith("<td id='utilidadPerdida'colspan='2'>" + utilidadPerdida + "</td>");
             $("#labelInjusti").replaceWith("<span id='labelInjusti'>" + gastoi + "</span>");
             $("#inputInjusti").replaceWith("<span id='inputInjusti' class='oculto'><input type='number' value='" + gastoi + "'/></span>");
-            $("#totalGastos").replaceWith("<span style='margin-right: 40px' id='totalGastos'>Total de gastos:" + Math.round((totalGastos+renta) * 100) / 100 + "</span>");
+            $("#totalGastos").replaceWith("<span style='margin-right: 40px' id='totalGastos'>Total de gastos:" + Math.round((totalGastos + renta + parseFloat(cuotaFija) + parseFloat(seguridadSocial)  + parseFloat(fuerzaW) + tributo) * 100) / 100 + "</span>");
 
             $("#total1").replaceWith("<td id='total1'>" + porcientoTotalGastos + "</td>");
             $("#total2").replaceWith("<td id='total2'>" + totalGastos + "</td>");
@@ -151,11 +151,11 @@ function guardarCambios(e) {
     EnviarDatosAjax("modificarInstancias", state, $("#inputInjustiXciento input").val());
 }
 
-function toogleAgregar(e, id_cliente, id_clienteFecha, nombre_cliente, nombre_anno, nombre_mes, id_anno, tipo) {
+function toogleAgregar(e, id_cliente, id_clienteFecha, nombre_cliente, nombre_anno, nombre_mes, id_anno, tipo,id_mes) {
     e.preventDefault();
     if (toogle == 0) {
         toogle = 1;
-        mostrarInsertar(id_cliente, id_clienteFecha, nombre_cliente, nombre_anno, nombre_mes, id_anno, tipo);
+        mostrarInsertar(id_cliente, id_clienteFecha, nombre_cliente, nombre_anno, nombre_mes, id_anno, tipo,id_mes);
     } else {
         $("#agregar").replaceWith("<div id='agregar'></div>");
         toogle = 0;
@@ -164,11 +164,11 @@ function toogleAgregar(e, id_cliente, id_clienteFecha, nombre_cliente, nombre_an
 
 }
 
-function mostrarInsertar(id_cliente, id_clienteFecha, nombre_cliente, nombre_anno, nombre_mes, id_anno, tipo) {
+function mostrarInsertar(id_cliente, id_clienteFecha, nombre_cliente, nombre_anno, nombre_mes, id_anno, tipo,id_mes) {
 
     $.ajax({
         type: "POST",
-        url: "paginas/SubPaginas/Vista_EmpezarContabilidad.php?id_clienteFecha=" + id_clienteFecha + "&&nombre_cliente=" + nombre_cliente + "&&nombre_anno=" + nombre_anno + "&&nombre_mes=" + nombre_mes + "&&id_anno=" + id_anno + "&&id_cliente=" + id_cliente + "&&include=1&tipo=" + tipo + "",
+        url: "paginas/SubPaginas/Vista_EmpezarContabilidad.php?id_mes=" + id_mes + "&&id_clienteFecha=" + id_clienteFecha + "&&nombre_cliente=" + nombre_cliente + "&&nombre_anno=" + nombre_anno + "&&nombre_mes=" + nombre_mes + "&&id_anno=" + id_anno + "&&id_cliente=" + id_cliente + "&&include=1&tipo=" + tipo + "",
 
         success: function (response) {
             $("#agregar").html(response);

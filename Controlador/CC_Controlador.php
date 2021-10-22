@@ -155,7 +155,7 @@ else if ($accion == "insertarMesAnnoCliente") {
     require_once '../Modelo/CM_FechaCliente.php';
     $objeto = new FechaCliente();
     //echo var_dump($_REQUEST);
-    if ($tipo == "micro") {
+    if ($tipo == "Micro") {
         $valor = 750;
     } else {
         $valor = 1200;
@@ -163,7 +163,8 @@ else if ($accion == "insertarMesAnnoCliente") {
     if ($tipomes == "0") {
         $impuestos = [
             ["tipo_impuesto" => "impuesto10%", "tipo_pago" => "$ImpuestoDiez", "valor" => 0,],
-            ["tipo_impuesto" => "cuotaFija", "tipo_pago" => "$CuotaFija", "valor" => $valor,]
+            ["tipo_impuesto" => "cuotaFija", "tipo_pago" => "$CuotaFija", "valor" => $valor,],
+            
         ];
     } else {
         $impuestos = [
@@ -203,7 +204,7 @@ else if ($accion == "modificarMesAnnoCliente") {
         $impuestos = [
             ["tipo_impuesto" => "impuesto10%", "tipo_pago" => "$ImpuestoDiez", "valor" => 0,],
             ["tipo_impuesto" => "cuotaFija", "tipo_pago" => "$CuotaFija", "valor" => $valor,],
-            ["tipo_impuesto" => "fuerzaTrabajo", "tipo_pago" => "$FuerzaW", "valor" => $salariotrabajador * 0.05,],
+            ["tipo_impuesto" => "fuerzaTrabajo", "tipo_pago" => "$FuerzaW", "valor" => $salariotrabajador],
             ["tipo_impuesto" => "seguridadSocial", "tipo_pago" => "$SeguridadSocial", "valor" => 262.5,]
         ];
     }
@@ -246,7 +247,7 @@ else if ($accion == "crearInstanciaCuenta") {
                 $id_Subcuenta[$i] = $instancias[0][9][$i][0];
                 $valor_subcuenta[$i] = $instancias[0][9][$i][2];
                 $alcance[$i] = $instancias[0][9][$i][4];
-                $objeto->crearInstanciaCuenta($id_cuenta, $id_Subcuenta[$i], $valor_subcuenta[$i], $id_clienteFecha, $id_contrapartida, $grupoComprobante, $estado, $alcance[$i]);
+                $objeto->crearInstanciaCuenta($id_cuenta, $id_Subcuenta[$i], $valor_subcuenta[$i], $id_clienteFecha, $id_contrapartida, $grupoComprobante, $instancias[0][9][$i][3], $alcance[$i]);
             }
         } else {
 
@@ -268,7 +269,8 @@ else if ($accion == "crearInstanciaCuenta") {
     require '../Modelo/CM_Contabilidad.php';
     $objeto = new Contabilidad();
     $objeto->eliminarInstancia($id_cuenta, $id_contrapartida, $id_clienteFecha);
-    header($plantilla . "5&&id_cliente=$id_cliente&&id_anno=$id_anno&&nombre_cliente=$nombre_cliente&&nombre_anno=$nombre_anno&&nombre_mes=$nombre_mes&&id_clienteFecha=$id_clienteFecha&&opcion2=3&tipo=$tipo");
+    header($plantilla . "5&&id_cliente=$id_cliente&&id_anno=$id_anno&&nombre_cliente=$nombre_cliente&&nombre_anno=$nombre_anno&&nombre_mes=$nombre_mes&&id_mes=$id_mes&&id_clienteFecha=$id_clienteFecha&&opcion2=3&tipo=$tipo");
+    
 } else if ($accion == "modificarInstancia") {
 
     require '../Modelo/CM_Contabilidad.php';
@@ -307,11 +309,10 @@ else if ($accion == "mostrarSubcuetasDeid") {
 else if ($accion == "actualizarDescripcionComprobante") {
     require '../Modelo/CM_Contabilidad.php';
     $objeto = new Contabilidad();
-     $instancias = json_decode($instancias);
-   $objeto->ModificarComprobante($id_clienteFecha, $instancias[1],$instancias[0] );
-   
+    $instancias = json_decode($instancias);
+    $objeto->ModificarComprobante($id_clienteFecha, $instancias[1], $instancias[0]);
+
     echo var_dump($instancias[0]);
-    
 }
 
 //insertar un anno para que este disponible
@@ -356,7 +357,17 @@ else if ($accion == "modificarAnno") {
 else if ($accion == "actualizarAcumulado") {
     require '../Modelo/CM_FechaCliente.php';
     $objeto = new FechaCliente();
-    return $objeto->actualizarAcumulado($acumulado, $id_clienteFecha, $tributo);
+   echo  $objeto->actualizarAcumulado($acumulado, $id_clienteFecha, $tributo);
+} else if ($accion == "actualizarImpuestos") {
+    require_once '../Modelo/CM_FechaCliente.php';
+    $objeto = new FechaCliente();
+           ;
+      ;
+    if ($objeto->actualizarImpuestoDiez($id_clienteFecha, $impuesto) == "ok" &&  $objeto->actualizarFuerzaW($id_clienteFecha, $FuerzaW)=="ok") {
+        echo "ok";
+    }else {
+        echo "fail";
+    }
 }
 
         

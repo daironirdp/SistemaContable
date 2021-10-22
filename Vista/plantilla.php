@@ -88,7 +88,7 @@ require_once '../Modelo/CM_Cuentas.php';
 
                         <li class=" <?php echo $clientes ?>"><a class="navbar-brand " href="?opcion=0">Clientes</a></li>
                         <li class="<?php echo $cuentas ?>"><a href="?opcion=1">Administrar cuentas</a></li>
-                        <li class="<?php echo $annos; ?>"><a href="?opcion=2">Administrar annos</a></li>
+                        <li class="<?php echo $annos; ?>"><a href="?opcion=2">Administrar años</a></li>
 
                     </ul>
 

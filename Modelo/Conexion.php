@@ -20,6 +20,7 @@ class Conexion {
 
     function __construct() {
         try {
+            //establecer conexion
             $this->conexion = new PDO("mysql:host=localhost;dbname=sistemacontable", "root", "");
             $this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conexion->exec("SET CHARACTER SET utf8");

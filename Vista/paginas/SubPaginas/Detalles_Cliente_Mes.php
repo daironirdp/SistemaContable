@@ -81,7 +81,7 @@ if ($mes_nuevo["nombre"] != "Diciembre") {
 
 
         <div id="insertarFechaNueva">
-            <form action="../Controlador/CC_Controlador.php?accion=insertarMesAnnoCliente" class="insertarMes oculto form"  method="POST">
+            <form action="../Controlador/CC_Controlador.php?accion=insertarMesAnnoCliente" class="insertarMes oculto "  method="POST">
                 <h4>Creando mes de <?php echo $mes_nuevo[0]["nombre"] ?></h4>
                 <div style="display: flex; justify-content: space-around">
 

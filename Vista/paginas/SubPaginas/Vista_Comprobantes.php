@@ -5,10 +5,14 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <?php
-//echo var_dump($datos);
+
 $cuentaAux = new Cuentas();
 $comprobantes = $objeto->ObtenerComprobantes($id_clienteFecha);
 
+
+for ($i = count($comprobantes); $i < count($datos); $i++) {
+    $objeto->crearComprobante($id_clienteFecha, $i + 1);
+}
 ?>
 
 <div class="" style="
@@ -35,6 +39,7 @@ $comprobantes = $objeto->ObtenerComprobantes($id_clienteFecha);
                     <th>Parcial</th>
                     <th>Debe</th>
                     <th>Haber</th>
+                    <th ><a href=""style="background-color: red" class="btn btn-md btn-danger">X</a></th>
                     </thead>
 
                     <tbody>
@@ -43,7 +48,7 @@ $comprobantes = $objeto->ObtenerComprobantes($id_clienteFecha);
                             <td><?php echo $datos[$i]["id_cuenta"] ?></td>
                             <?php if (!is_array($datos[$i]["subcuentas"])) { ?>
 
-                                <td><?php echo $datos[$i]["subcuentas"] ?></td>
+                                <td><?php echo '--' ?></td>
 
                                 <td><?php echo '--' ?></td>
                                 <td><?php echo $datos[$i]["nombre_cuenta"] ?></td>
@@ -58,7 +63,7 @@ $comprobantes = $objeto->ObtenerComprobantes($id_clienteFecha);
                         <td>--</td>
                         <td><?php echo $datos[$i]["nombre_cuenta"] ?></td>
                         <td>--</td>
-                        <td><?php echo $datos[$i]["valor"] ?></td>
+                        <td><?php echo $datos[$i]["valor"]; ?></td>
                         <td></td>
                         </tr>
                         <?php
@@ -69,8 +74,8 @@ $comprobantes = $objeto->ObtenerComprobantes($id_clienteFecha);
                                     <td>--</td>
                                     <td><?php echo $datos[$i]["subcuentas"][$j]['id_subcuenta'] ?></td>
                                     <td>--</td>
-                                    <td><?php echo $datos[$i]["subcuentas"][$j]['nombre_subcuenta'] ?></td>
-                                    <td><?php echo $datos[$i]["subcuentas"][$j]['valor'] ?></td>
+                                    <td colspan=""><?php echo $datos[$i]["subcuentas"][$j]['nombre_subcuenta'] ?></td>
+                                    <td colspan=""><?php echo $datos[$i]["subcuentas"][$j]['valor'] ?></td>
                                 </tr>
 
 
@@ -86,7 +91,7 @@ $comprobantes = $objeto->ObtenerComprobantes($id_clienteFecha);
                         <?php if (!is_array($datos[$i]["subcuentas"])) {
                             ?>
 
-                            <td><?php echo $datos[$i]["subcuentas"] ?></td>
+                            <td><?php echo '--' ?></td>
                             <td>--</td>
                             <td><?php echo $cuentaAux->obtenerCuentaXid($datos[$i]["contrapartida"])[0]['nombre_cuenta']; ?></td>
                             <td>--</td>
@@ -123,34 +128,34 @@ $comprobantes = $objeto->ObtenerComprobantes($id_clienteFecha);
 
                     <?php } ?>
 
-                    <tr><td colspan="7">No.comprobante <?php echo $i + 1 ?></td> </tr>
+                    <tr><td colspan="8">No.comprobante <?php echo $i + 1 ?></td> </tr>
 
                     <tr>
                         <td>Descripcion </td>
                         <td colspan="5">
 
                             <p ondblclick="ModificarComprobante(event, 'descripcion'<?php echo $i + 1 ?>)" class=" <?php
-                    if ($comprobantes[$i]['descripcion'] == '') {
-                        echo 'oculto';
-                    }
-                    ?>" id="descripcionOculta<?php echo $i + 1 ?>"><?php echo $comprobantes[$i]['descripcion'] ?></p>
+                            if ($comprobantes[$i]['descripcion'] == '') {
+                                echo 'oculto';
+                            }
+                            ?>" id="descripcionOculta<?php echo $i + 1 ?>"><?php echo $comprobantes[$i]['descripcion'] ?></p>
                             <textarea class="form-control <?php
-                        if ($comprobantes[$i]['descripcion'] != '') {
-                            echo 'oculto';
-                        }
-                    ?>" rows="5" style="resize: none" cols="45" id="descripcion<?php echo $i + 1 ?>"  name="descripcion"><?php echo $comprobantes[$i]['descripcion'] ?></textarea>  </td>
+                            if ($comprobantes[$i]['descripcion'] != '') {
+                                echo 'oculto';
+                            }
+                            ?>" rows="5" style="resize: none" cols="45" id="descripcion<?php echo $i + 1 ?>"  name="descripcion"><?php echo $comprobantes[$i]['descripcion'] ?></textarea>  </td>
 
-                        <td style="border: none;">
+                        <td style="border: none;" colspan="2">
                             <button class="btn btn-primary <?php
-                        if ($comprobantes[$i]['descripcion'] != '') {
-                            echo 'oculto';
-                        }
-                    ?>" id="guardar<?php echo $i + 1 ?>"  onClick="GuardarComprobante(event, 'descripcion<?php echo $i + 1 ?>', 'descripcionOculta<?php echo $i + 1 ?>')">Guardar</button>
+                            if ($comprobantes[$i]['descripcion'] != '') {
+                                echo 'oculto';
+                            }
+                            ?>" id="guardar<?php echo $i + 1 ?>"  onClick="GuardarComprobante(event, 'descripcion<?php echo $i + 1 ?>', 'descripcionOculta<?php echo $i + 1 ?>')">Guardar</button>
                             <button class="btn btn-primary <?php
-                        if ($comprobantes[$i]['descripcion'] == '') {
-                            echo 'oculto';
-                        }
-                    ?>" id="modificar<?php echo $i + 1 ?>"  onClick="GuardarComprobante(event, 'descripcion<?php echo $i + 1 ?>', 'descripcionOculta<?php echo $i + 1 ?>')">Modificar</button>
+                            if ($comprobantes[$i]['descripcion'] == '') {
+                                echo 'oculto';
+                            }
+                            ?>" id="modificar<?php echo $i + 1 ?>"  onClick="GuardarComprobante(event, 'descripcion<?php echo $i + 1 ?>', 'descripcionOculta<?php echo $i + 1 ?>')">Modificar</button>
                         </td>
                     </tr>
 
@@ -173,7 +178,8 @@ $comprobantes = $objeto->ObtenerComprobantes($id_clienteFecha);
             <th>Concepto</th>
             <th>Parcial</th>
             <th>Debe</th>
-            <th>Haber</th>                        
+            <th>Haber</th>
+            <th><a href=""style="background-color: red" class="btn btn-md btn-danger">X</a></th>
             </thead>
             <tr>
                 <td>810</td>
@@ -230,10 +236,10 @@ $comprobantes = $objeto->ObtenerComprobantes($id_clienteFecha);
                 </tr>
             <?php } ?>
             <tr>
-                <td>100</td>
+                <td>405</td>
                 <td></td>
                 <td>--</td>
-                <td>Caja</td>
+                <td>CuentasXpagar</td>
                 <td>--</td>
                 <td></td>
                 <td><?php echo $cuotaFija[0] + $SeguridadSocial[0] + $impuestos[0] + $FuerzaW[0]; ?></td>

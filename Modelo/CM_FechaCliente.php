@@ -59,6 +59,15 @@ class FechaCliente {
 
                 $conexion->ejecutarConsulta($sql);
             }
+            $array = ["fuerzaTrabajo", "seguridadSocial"];
+            for ($index = 0; $index < 2; $index++) {
+
+                $sql = "INSERT INTO impuestos (tipo_impuesto, tipo_pago, valor, id_clienteFecha)"
+                        . "values('$array[$index]','-1','0','$id_clienteFecha')";
+
+
+                $conexion->ejecutarConsulta($sql);
+            }
         } else {
             echo "aki";
             $array = ["impuesto10%", "cuotaFija", "fuerzaTrabajo", "seguridadSocial"];
@@ -178,6 +187,20 @@ class FechaCliente {
         }
     }
 
+    function actualizarFuerzaW($id_clienteFecha, $FuerzaW) {
+        $sql = "UPDATE impuestos SET valor='$FuerzaW'"
+                . " WHERE id_clienteFecha='$id_clienteFecha'and tipo_impuesto ='fuerzaTrabajo'";
+        $conexion = new Conexion();
+        $conexion->ejecutarConsulta($sql);
+        if ($conexion->ejecutarConsulta($sql)) {
+            $conexion->CerrarConexion();
+            return "ok";
+        } else {
+            $conexion->CerrarConexion();
+            return "error";
+        }
+    }
+
     function mostrarMesDatosComplementarios($id_clienteFecha) {
         $sql = "Select * "
                 . "from clientefecha cf"
@@ -213,7 +236,7 @@ class FechaCliente {
     function devolverFechaAnterior($id_mes, $id_anno) {
         $id_mes = $id_mes - 1;
         if ($id_mes != 0) {
-          ;
+            ;
             $sql = "Select id_clienteFecha from clientefecha "
                     . "where id_mes ='$id_mes' and id_anno = '$id_anno'";
             $conexion = new Conexion();

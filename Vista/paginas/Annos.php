@@ -11,7 +11,8 @@ require_once '../Modelo/CM_Clientes.php';
 require_once '../Modelo/CM_Annos.php';
 
 $objeto = new Annos();
-$annos = $objeto->obtenerAnnos()
+$annos = $objeto->obtenerAnnos();
+      
 ?>
 
 <html>
@@ -20,6 +21,9 @@ $annos = $objeto->obtenerAnnos()
         <title></title>
     </head>
     <body>
+        <?php
+          if($annos!=false){
+        ?>
         <table class="table table-hover table-condensed">
             <thead>
                 <tr>
@@ -60,14 +64,25 @@ $annos = $objeto->obtenerAnnos()
                 ?>
             </tbody>
         </table>
+        <?php
+        }else{
+            echo "<h4>No hay años declarados</h4>";
+        }
+?>
 
-        <form action="../Controlador/CC_Controlador.php?accion=insertarAnno" class="insertar oculto" method="POST">
-            <input type="number" min="0"name="nombre" value='20<?php echo date("y"); ?>'/>
-            <input type="submit"/>
+        <form action="../Controlador/CC_Controlador.php?accion=insertarAnno" class="insertar oculto form " method="POST">
+            <div class="form-group" style="width: 30%;">
+                 <input type="number" class="form-control" min="0"name="nombre" value='20<?php echo date("y"); ?>'/>
+            </div>
+           
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit"/>
+            </div>
+            
 
         </form>
 
-        <a href="" onclick="insertAnno(event,'insertar')">Agregar anno</a>
+        <a href="" onclick="insertAnno(event,'insertar')">Agregar año</a>
     </body>
 </html>
 <style>
@@ -88,3 +103,4 @@ $annos = $objeto->obtenerAnnos()
    
 
 </script>
+

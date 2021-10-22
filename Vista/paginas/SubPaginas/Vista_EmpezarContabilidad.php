@@ -25,6 +25,7 @@ $objeto = new Cuentas();
 $tipos_cuenta = $objeto->obtenerCuentas();
 $subcuentas = $objeto->obtenerSubCuentas();
 //$subcuentas = $contabilidad->obtenerInstanciasSubCuentas($id_mes_anno_cliente, $id_cuenta)
+
 ?>
 
 <script>
@@ -273,7 +274,7 @@ $subcuentas = $objeto->obtenerSubCuentas();
             </div>
 
             <button onclick="insertar(event)" id="i_ingresos">Insertar</button>
-            <a href="?opcion=5&opcion2=0&&nombre_cliente=<?php echo $nombre_cliente ?>&nombre_anno=<?php echo $nombre_anno ?>&nombre_mes=<?php echo $nombre_mes ?>&id_clienteFecha=<?php echo $id_clienteFecha ?>&id_cliente=<?php echo $id_cliente ?>&id_anno=<?php echo $id_anno ?>&tipo=<?php echo $tipo; ?>" >Generar</a>
+            <a href="?id_mes=<?php echo $id_mes ?>&opcion=5&opcion2=0&&nombre_cliente=<?php echo $nombre_cliente ?>&nombre_anno=<?php echo $nombre_anno ?>&nombre_mes=<?php echo $nombre_mes ?>&id_clienteFecha=<?php echo $id_clienteFecha ?>&id_cliente=<?php echo $id_cliente ?>&id_anno=<?php echo $id_anno ?>&tipo=<?php echo $tipo; ?>" >Generar</a>
 
 
 
@@ -313,7 +314,7 @@ console.log(array);
                 if (e.target == i_ingresos) {
                     var d = buscar(cuentas, $("#cuenta").val(), "cuenta");
                     var h = buscar(cuentas, $("#contrapartida").val(), "cuenta");
-                    $("#insertados2").append("<li id='" + h[1] + $("#haberValue").val() + "'>" + $("#contrapartida").val() + "  " + h[1] + "     " + $("#haberValue").val() + "$  <ul></ul><a href='../Controlador/CC_Controlador.php?accion=eliminarInstancia&tipo=<?php echo $tipo ?>&id_cliente=<?php echo $id_cliente ?>&&id_anno=<?php echo $id_anno ?>&nombre_cliente=<?php echo $nombre_cliente ?>&nombre_anno=<?php echo $nombre_anno ?>&nombre_mes=<?php echo $nombre_mes ?>&id_clienteFecha=<?php echo $id_clienteFecha ?>&opcion2=3&&id_cuenta=" + $("#cuenta").val() + "&id_contrapartida=" + $("#contrapartida").val() + "'>Eliminar</a> </li>");
+                    $("#insertados2").append("<li id='" + h[1] + $("#haberValue").val() + "'>" + $("#contrapartida").val() + "  " + h[1] + "     " + $("#haberValue").val() + "$  <ul></ul><a href='../Controlador/CC_Controlador.php?accion=eliminarInstancia&tipo=<?php echo $tipo ?>&id_mes=<?php echo $id_mes ?>&id_cliente=<?php echo $id_cliente ?>&&id_anno=<?php echo $id_anno ?>&nombre_cliente=<?php echo $nombre_cliente ?>&nombre_anno=<?php echo $nombre_anno ?>&nombre_mes=<?php echo $nombre_mes ?>&id_clienteFecha=<?php echo $id_clienteFecha ?>&opcion2=3&&id_cuenta=" + $("#cuenta").val() + "&id_contrapartida=" + $("#contrapartida").val() + "'>Eliminar</a> </li>");
                     if (subcuenta_insertada.length == 0) {
                         $("#insertados").append("<li id='" + d[1] + $("#debeValue").val() + "'>" + $("#cuenta").val() + "  " + d[1] + "   " + $("#debeValue").val() + " $<ul></ul></li>");
                         if (subcuenta_insertada2.length == 0) {

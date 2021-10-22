@@ -67,7 +67,7 @@ and open the template in the editor.
                                         echo $d["nombre_cuenta"];
                                     }
                                     ?>
-                                    <select onchange="actualizarTipoGastoEstado('<?php echo $d['id_instanciaCuenta'] ?>', 'estado<?php echo $d['id_instanciaCuenta'] ?>')" class="oculto" id="estado<?php echo $d['id_instanciaCuenta'] ?>">
+                                    <select  onchange="actualizarTipoGastoEstado('<?php echo $d['id_instanciaCuenta'] ?>', 'estado<?php echo $d['id_instanciaCuenta'] ?>')" class="oculto form-control" id="estado<?php echo $d['id_instanciaCuenta'] ?>">
                                         <option <?php
                                         if ($d["estado"] == '1') {
                                             echo "selected";
@@ -94,14 +94,23 @@ and open the template in the editor.
                                 if ($d["id_subcuenta"] == 0) {
                                     echo '--';
                                 } else {
-                                    echo $d["id_subcuenta"];
+                                    $flag = $objeto->EsSubcuentaDe($d["id_cuenta"], $d["id_subcuenta"]);
+                                    if ($flag) {
+                                        echo $d["id_subcuenta"];
+                                    } else {
+                                        echo "--";
+                                    }
                                 };
                                 ?></td>
                             <td><?php
                                 if ($d["id_subcuenta"] == 0) {
                                     echo "--";
                                 } else {
-                                    echo $d["nombre_subcuenta"];
+                                    if ($flag) {
+                                        echo $d["nombre_subcuenta"];
+                                    } else {
+                                        echo "--";
+                                    }
                                 }
                                 ?></td>
                             <td ondblclick="modificar('label<?php echo $d["id_instanciaCuenta"] ?>', 'valor<?php echo $d["id_instanciaCuenta"] ?>')" colspan="1">
@@ -164,44 +173,44 @@ and open the template in the editor.
                 <tr>
                     <td colspan="3">Cuota Fija:</td>
                     <td colspan="<?php
-                    if ($cuotaFija[1] == 1) {
-                        echo 2;
-                    } else {
-                        echo 3;
-                    }
-                    ?>"><?php echo $cuotaFija[0] ?></td>
+                if ($cuotaFija[1] == 1) {
+                    echo 2;
+                } else {
+                    echo 3;
+                }
+                ?>"><?php echo $cuotaFija[0] ?></td>
 
                     <?php
                     // si se pago con tranfermovil descontarle un 3%  
                     if ($cuotaFija[1] == 1) {
                         ?>
                         <td colspan="2" id="cuotafija2"><?php
-                            echo $cuotaFija[0] - $cuotaFija[0] * 0.03;
-                            ?></td>
-                    <?php } ?>
+                    echo $cuotaFija[0] - $cuotaFija[0] * 0.03;
+                        ?></td>
+                        <?php } ?>
 
                 </tr> 
 
                 <tr>
                     <td colspan="3">Tributo 10%:</td>
                     <td colspan="<?php
-                    if ($impuestos[1] == 1) {
-                        echo 2;
-                    } else {
-                        echo 3;
-                    }
-                    ?>" id="tributo"><?php echo $ingresos * 0.10; ?></td>
+                        if ($impuestos[1] == 1) {
+                            echo 2;
+                        } else {
+                            echo 3;
+                        }
+                        ?>" id="tributo"><?php echo $ingresos * 0.10; ?></td>
                         <?php
                         // si se pago con tranfermovil descontarle un 3% y  si no esta guardado el valor calcularlo 
                         if ($impuestos[1] == 1) {
                             ?>
                         <td colspan="2" id="tributo2"><?php
-                            if ($impuestos[0] == 0)
-                                echo $ingresos * 0.10 - ($ingresos * 0.10) * 0.03;
-                            else
-                                echo $impuestos[0] - $impuestos * 0.03;
+                        if ($impuestos[0] == 0)
+                            echo $ingresos * 0.10 - ($ingresos * 0.10) * 0.03;
+                        else
+                            echo $impuestos[0] - $impuestos * 0.03;
                             ?></td>
-                    <?php } ?>
+                        <?php } ?>
                 </tr>
                 <?php
 //si es un mes trimestre mostrar :
@@ -210,21 +219,21 @@ and open the template in the editor.
                     <tr>
                         <td colspan="3">Fuerza trabajo 5%:</td>
                         <td colspan="<?php
-                        // si se pago con trandermovil dividir el espacio en 2
-                        if ($FuerzaW[1] == 1) {
-                            echo 2;
-                        } else {
-                            echo 3;
-                        }
-                        ?>" id="fuerzaW"><?php echo $FuerzaW[0] ?></td>
+                // si se pago con trandermovil dividir el espacio en 2
+                if ($FuerzaW[1] == 1) {
+                    echo 2;
+                } else {
+                    echo 3;
+                }
+                    ?>" id="fuerzaW"><?php echo $FuerzaW[0] ?></td>
                             <?php
                             // si se pago con tranfermovil descontarle un 3% 
                             if ($FuerzaW[1] == 1) {
                                 ?>
                             <td colspan="2" id="fuerzaW2"><?php
-                                echo $FuerzaW[0] - ($FuerzaW[0] * 0.03);
+                        echo $FuerzaW[0] - ($FuerzaW[0] * 0.03);
                                 ?></td>
-                        <?php } ?>
+                            <?php } ?>
                     </tr>
                     <tr>
                         <td colspan="3">Seguridad social:</td>
@@ -234,16 +243,16 @@ and open the template in the editor.
                         } else {
                             echo 3;
                         }
-                        ?>" id="SeguridadSocial"><?php echo $SeguridadSocial[0] ?></td>
+                            ?>" id="SeguridadSocial"><?php echo $SeguridadSocial[0] ?></td>
 
                         <?php
                         // si se pago con tranfermovil descontarle un 3%  
                         if ($SeguridadSocial[1] == 1) {
                             ?>
                             <td colspan="2" id="seguridadSocial2"><?php
-                                echo $SeguridadSocial[0] - $SeguridadSocial[0] * 0.03;
-                                ?></td>
-                        <?php } ?>
+                    echo $SeguridadSocial[0] - $SeguridadSocial[0] * 0.03;
+                            ?></td>
+                            <?php } ?>
 
                     </tr>
 
@@ -266,6 +275,14 @@ and open the template in the editor.
                         }
 
                     });
+                    $.ajax({
+                        type: "POST",
+                        url: "../Controlador/CC_Controlador.php?accion=actualizarImpuestos&&id_clienteFecha=<?php echo $id_clienteFecha; ?>&&FuerzaW=<?php echo $FuerzaW[0] ?>&&impuesto=<?php echo $ingresos * 0.10 ?>",
+                        success: function (response) {
+                            console.log(response);
+                        }
+
+                    });
                 </script>
                 </tr>
 
@@ -283,7 +300,7 @@ and open the template in the editor.
 
                     </td>
                     <td colspan="1" id="gastoJustificado"><?php echo $gastosJ ?></td> 
-                 
+
                 </tr>
 
                 <tr>
@@ -291,18 +308,17 @@ and open the template in the editor.
                     <td colspan="1">Injustif</td>
                     <td colspan="1" id="gastoInjustificadoXciento1"><?php
                         echo round(($gastosI / $ingresos) * 100, 2);
-                       
                         ?></td>
 
                     <td colspan="1">
 
                         <span id="labelInjusti" class=""><?php
-                            echo $gastosI;
+                        echo $gastosI;
 //                       
-                            ?></span>
+                        ?></span>
 
                     </td>
- 
+
                 </tr>
 
                 <tr>
@@ -311,12 +327,12 @@ and open the template in the editor.
                     </td>
                     <td id="total1"> <?php echo round((( $gastosJ) / $ingresos) * 100, 2) + round(($gastosI / $ingresos) * 100, 2); ?></td>
                     <td id="total2"><?php echo $gastosJ + $gastosI ?></td>
-                 
+
                 </tr>
                 </tbody>
             </table>
-            <span style="margin-right: 40px" id="totalGastos">Total de gastos: <?php echo $gastosJ + $gastosI +$renta ?></span>
-            <a href=""onclick="toogleAgregar(event, id_cliente, id_clienteFecha, nombre_cliente, nombre_anno, nombre_mes, id_anno, tipo)">Agregar</a>
+            <span style="margin-right: 40px" id="totalGastos">Total de gastos: <?php echo $gastosJ + $gastosI + $renta + ($FuerzaW[0] + $SeguridadSocial[0] + $cuotaFija[0] + $ingresos * 0.10 ) ?></span>
+            <a href=""onclick="toogleAgregar(event, id_cliente, id_clienteFecha, nombre_cliente, nombre_anno, nombre_mes, id_anno, tipo, id_mes)">Agregar</a>
             <input class="btn btn-primary" type="submit" onclick="guardarCambios(event)" value="Guardar">
 
         </form>

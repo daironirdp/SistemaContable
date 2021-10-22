@@ -16,6 +16,7 @@ $datos = $objeto->obtenerInstanciasComprobantes($id_clienteFecha);
 $objeto2 = new FechaCliente();
 $impuestos_datos = $objeto2->mostrarDatosImpuestos($id_clienteFecha);
 $datos_complementarios = $objeto2->mostrarMesDatosComplementarios($id_clienteFecha);
+
 ?>
 <script>
 
@@ -24,6 +25,7 @@ $datos_complementarios = $objeto2->mostrarMesDatosComplementarios($id_clienteFec
     var nombre_cliente = '<?php echo $nombre_cliente; ?>';
     var nombre_anno = <?php echo $nombre_anno; ?>;
     var nombre_mes = '<?php echo $nombre_mes; ?>';
+    var id_mes = '<?php echo $id_mes; ?>';
     var id_anno = <?php echo $id_anno; ?>;
     var tipo = '<?php echo $tipo; ?>';
     var xcientoInjust = <?php echo $datos_complementarios[0]["xcientoInjust"] ?>
@@ -209,6 +211,7 @@ $datos_complementarios = $objeto2->mostrarMesDatosComplementarios($id_clienteFec
 
 
         </div>
+    
         <div id="agregar">
 
 
@@ -238,7 +241,7 @@ $datos_complementarios = $objeto2->mostrarMesDatosComplementarios($id_clienteFec
 } else {
     ?>
 
-    <h5> La contabilidad de este cliente en este mes no ha empezado no ha empezado  :<a href="?opcion=5&&id_cliente=<?php echo $id_cliente; ?>&&id_anno=<?php echo $id_anno; ?>&&nombre_cliente=<?php echo $nombre_cliente; ?>&&nombre_anno=<?php echo $nombre_anno; ?>&&nombre_mes=<?php echo $nombre_mes; ?>&&id_clienteFecha=<?php echo $id_clienteFecha; ?>&&opcion2=3&&tipo=<?php echo $tipo; ?>">Click para empezar</a></h5>
+    <h5> La contabilidad de este cliente en este mes no ha empezado no ha empezado  :<a href="?opcion=5&&id_cliente=<?php echo $id_cliente; ?>&&id_mes=<?php echo $id_mes; ?>&&id_anno=<?php echo $id_anno; ?>&&nombre_cliente=<?php echo $nombre_cliente; ?>&&nombre_anno=<?php echo $nombre_anno; ?>&&nombre_mes=<?php echo $nombre_mes; ?>&&id_clienteFecha=<?php echo $id_clienteFecha; ?>&&opcion2=3&&tipo=<?php echo $tipo; ?>">Click para empezar</a></h5>
     <?php
 }
 // put your code here
