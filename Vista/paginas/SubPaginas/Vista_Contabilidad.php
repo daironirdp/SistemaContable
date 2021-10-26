@@ -16,7 +16,34 @@ $datos = $objeto->obtenerInstanciasComprobantes($id_clienteFecha);
 $objeto2 = new FechaCliente();
 $impuestos_datos = $objeto2->mostrarDatosImpuestos($id_clienteFecha);
 $datos_complementarios = $objeto2->mostrarMesDatosComplementarios($id_clienteFecha);
+$bonificaciones = $objeto->obtenerBonificaciones($id_clienteFecha);
 
+$boni_impuesto = 0;
+$boni_seguridad = 0;
+$boni_fw = 0;
+$boni_cf = 0;
+$boni_valor = 0;
+foreach ($bonificaciones as $bonificacion) {
+    switch ($bonificacion["impuesto"]) {
+        case "impuesto10%": {
+                $boni_impuesto = $bonificacion;
+            }
+            break;
+        case"cuotaFija": {
+                $boni_cf = $bonificacion;
+            }
+            break;
+        case"seguridadSocial": {
+                $boni_seguridad = $bonificacion;
+            }
+            break;
+        case"fuerzaTrabajo": {
+                $boni_fw = $bonificacion;
+            }
+            break;
+    }
+    $boni_valor += $bonificacion['valor'];
+}
 ?>
 <script>
 
@@ -103,8 +130,8 @@ $datos_complementarios = $objeto2->mostrarMesDatosComplementarios($id_clienteFec
                                         $valor += $mes['salariotrabajador'];
                                     }
                                 }
-                               
-                                $FuerzaW = [$valor* 0.05, $i["tipo_pago"]];
+
+                                $FuerzaW = [$valor * 0.05, $i["tipo_pago"]];
                             } else {
                                 $FuerzaW = [$i["valor"], $i["tipo_pago"]];
                             }
@@ -211,7 +238,7 @@ $datos_complementarios = $objeto2->mostrarMesDatosComplementarios($id_clienteFec
 
 
         </div>
-    
+
         <div id="agregar">
 
 

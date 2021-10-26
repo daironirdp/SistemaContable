@@ -5,7 +5,6 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <?php
-
 $cuentaAux = new Cuentas();
 $comprobantes = $objeto->ObtenerComprobantes($id_clienteFecha);
 
@@ -187,7 +186,17 @@ for ($i = count($comprobantes); $i < count($datos); $i++) {
                 <td>--</td>
                 <td>Tazas</td>
                 <td>--</td>
-                <td><?php echo $impuestos[0] + $FuerzaW[0]; ?></td>
+                <td><?php
+                    if ($bonificaciones != false) {
+                        if ($boni_fw != 0) {
+                            echo $impuestos[0] + $FuerzaW[0] - $boni_fw["valor"] - $boni_impuesto['valor'];
+                        } else {
+                            echo $impuestos[0] + $FuerzaW[0] - $boni_impuesto['valor'];
+                        }
+                    } else {
+                        echo $impuestos[0] + $FuerzaW[0];
+                    }
+                    ?></td>
                 <td></td>
             </tr>
             <tr>
@@ -195,7 +204,12 @@ for ($i = count($comprobantes); $i < count($datos); $i++) {
                 <td>126</td>
                 <td>--</td>
                 <td>Impuesto10%</td>
-                <td><?php echo $impuestos[0]; ?></td>
+                <td><?php
+                    if ($boni_impuesto == 0)
+                        echo $impuestos[0];
+                    else
+                        echo $impuestos[0] - $boni_impuesto["valor"];
+                    ?></td>
 
             </tr>
             <?php if ($FuerzaW[0] != 0) { ?>
@@ -204,7 +218,12 @@ for ($i = count($comprobantes); $i < count($datos); $i++) {
                     <td>90</td>
                     <td>--</td>
                     <td>Fuerza de trabajo</td>
-                    <td><?php echo $FuerzaW[0]; ?></td>
+                    <td><?php
+                        if ($boni_fw == 0)
+                            echo $FuerzaW[0];
+                        else
+                            echo $FuerzaW[0] - $boni_fw["valor"];
+                        ?></td>
 
                 </tr>
             <?php } ?>
@@ -214,7 +233,17 @@ for ($i = count($comprobantes); $i < count($datos); $i++) {
                 <td>--</td>
                 <td>Patrimonio</td>
                 <td>--</td>
-                <td><?php echo $cuotaFija[0] + $SeguridadSocial[0]; ?></td>
+                <td><?php
+                    if ($bonificaciones != false) {
+                        if ($boni_seguridad != 0) {
+                            echo $cuotaFija[0] + $SeguridadSocial[0] - $boni_cf["valor"] - $boni_seguridad['valor'];
+                        } else {
+                            echo $cuotaFija[0] + $SeguridadSocial[0] - $boni_cf["valor"];
+                        }
+                    } else {
+                        echo $cuotaFija[0] + $SeguridadSocial[0];
+                    }
+                    ?></td>
                 <td></td>
             </tr>
             <tr>
@@ -222,7 +251,12 @@ for ($i = count($comprobantes); $i < count($datos); $i++) {
                 <td>37</td>
                 <td>--</td>
                 <td>Cuota Fija</td>
-                <td><?php echo $cuotaFija[0]; ?></td>
+                <td><?php
+                    if ($boni_cf == 0)
+                        echo $cuotaFija[0];
+                    else
+                        echo $cuotaFija[0] - $boni_cf["valor"];
+                    ?></td>
 
             </tr>
             <?php if ($SeguridadSocial[0] != 0) { ?>
@@ -231,9 +265,63 @@ for ($i = count($comprobantes); $i < count($datos); $i++) {
                     <td>50</td>
                     <td>--</td>
                     <td>Seguridad Social</td>
-                    <td><?php echo $SeguridadSocial[0]; ?></td>
+                    <td><?php
+                        if ($boni_seguridad == 0)
+                            echo $SeguridadSocial[0];
+                        else
+                            echo $SeguridadSocial[0] - $boni_seguridad["valor"];
+                        ?></td>
 
                 </tr>
+            <?php } ?>
+
+            <?php
+            if ($bonificaciones != false) {
+                ?>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>--</td>
+                    <td>Bonificaciones</td>
+                    <td>--</td>
+                    <td><?php
+                        echo $boni_valor;
+                        ?></td>
+                    <td></td>
+                </tr>
+
+                <?php foreach ($bonificaciones as $bonificacion) { ?>
+                    <tr>
+                        <td></td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td> <?php
+                            switch ($bonificacion["impuesto"]) {
+                                case "impuesto10%": {
+                                        echo "impuestos 10%";
+                                    }
+                                    break;
+                                case"cuotaFija": {
+                                        echo "cuota fija";
+                                    }
+                                    break;
+                                case"seguridadSocial": {
+                                        echo "seguridad soc.";
+                                    }
+                                    break;
+                                case"fuerzaTrabajo": {
+                                        echo "fuerza W";
+                                    }
+                                    break;
+                            }
+                            ?></td>
+                        <td><?php echo $bonificacion['valor']; ?></td>
+
+                    </tr>
+
+                <?php } ?>
+
+
             <?php } ?>
             <tr>
                 <td>405</td>

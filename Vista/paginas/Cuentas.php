@@ -89,26 +89,43 @@ $subcuentas = $objeto->obtenerSubCuentas();
                     ?>
                     </tbody>
                 </table>
-                <form id="cuentForm" action="../Controlador/CC_Controlador.php?accion=insertarCuenta" method="post" class="oculto">
-                    <label for="numero">Numero</label>
-                    <input type="number" min="0" name="id_cuenta" id="" value=""/>
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="" value=""/>
-                    <select id="" name="naturaleza">
-                        <option value="0">
-                            ---Naturaleza---
-                        </option>
-                        <option value="1">
-                            ---Deudora---
-                        </option>
-                        <option value="2">
-                            ---Acreedora---
-                        </option>
+                <div style="display: flex; justify-content: center">
+                    <form id="cuentForm" style="width: 40%; text-align: center" action="../Controlador/CC_Controlador.php?accion=insertarCuenta" method="post" class="oculto">
 
-                    </select>
+                        <div class="form-group">
+                            <label for="numero">Numero</label>
+                            <input class="form-control" type="number" min="0" name="id_cuenta" id="" value=""/>
+                        </div>
 
-                    <input type="submit"/>
-                </form>
+
+                        <div class="form-group">
+
+                            <label for="nombre">Nombre</label>
+                            <input class="form-control"type="text" name="nombre" id="" value=""/>
+                        </div>
+
+
+                        <div class="form-group">
+                            <select class="form-control"id="" name="naturaleza">
+                                <option value="0">
+                                    ---Naturaleza---
+                                </option>
+                                <option value="1">
+                                    ---Deudora---
+                                </option>
+                                <option value="2">
+                                    ---Acreedora---
+                                </option>
+
+                            </select>
+                        </div>
+
+
+                        <input class="btn btn-primary"type="submit"/>
+                    </form> 
+
+                </div>
+
                 <a href="" onclick="agregar(event, 'cuentForm')">Agregar cuenta</a>
             </div>
 
@@ -177,31 +194,49 @@ $subcuentas = $objeto->obtenerSubCuentas();
                     </tbody>
                 </table>
 
-                <form id="subCForm" action="../Controlador/CC_Controlador.php?accion=insertarSubCuenta"method="post"class="oculto">
-                    <label for="numero">Numero</label>
-                    <input type="number" min="0"name="id_Subcuenta" id=""/>
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre"/>
-                    <select id="" name="naturaleza">
-                        <option value="0">
-                            ---Naturaleza---
-                        </option>
-                        <option value="1">
-                            ---Deudora---
-                        </option>
-                        <option value="2">
-                            ---Acreedora---
-                        </option>
+                <div style="display: flex;justify-content: center;">
+                    <form id="subCForm" style="width: 40%; text-align: center" action="../Controlador/CC_Controlador.php?accion=insertarSubCuenta"method="post"class="oculto">
+                        <div class="form-group">
+                            <label for="numero">Numero</label>
+                            <input class="form-control" type="number" min="0"name="id_Subcuenta" id=""/>
+                        </div>
 
-                    </select>
-                    <select id="options" name="id_cuenta">
-                        <option value="0">
-                            ---Cuenta---
-                        </option>
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input class="form-control" type="text" name="nombre"/>
+                        </div>
 
-                    </select>
-                    <input type="submit"/>
-                </form>
+
+                        <div class="form-group">
+                            <select class="form-control" id="" name="naturaleza">
+                                <option value="0">
+                                    ---Naturaleza---
+                                </option>
+                                <option value="1">
+                                    ---Deudora---
+                                </option>
+                                <option value="2">
+                                    ---Acreedora---
+                                </option>
+
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <select class="form-control" id="options" name="id_cuenta">
+                                <option value="0">
+                                    ---Cuenta---
+                                </option>
+
+                            </select>
+                        </div>
+
+                        <input class="btn btn-primary" type="submit"/>
+                    </form>
+
+                </div>
+
                 <a href="" onclick="agregar(event, 'subCForm')">Agregar subcuenta</a>
             </div>
 

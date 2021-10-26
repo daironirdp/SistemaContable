@@ -173,44 +173,50 @@ and open the template in the editor.
                 <tr>
                     <td colspan="3">Cuota Fija:</td>
                     <td colspan="<?php
-                if ($cuotaFija[1] == 1) {
-                    echo 2;
-                } else {
-                    echo 3;
-                }
-                ?>"><?php echo $cuotaFija[0] ?></td>
+                    if ($cuotaFija[1] == 1) {
+                        echo 2;
+                    } else {
+                        echo 3;
+                    }
+                    ?>"><?php echo $cuotaFija[0] ?></td>
 
                     <?php
                     // si se pago con tranfermovil descontarle un 3%  
                     if ($cuotaFija[1] == 1) {
                         ?>
                         <td colspan="2" id="cuotafija2"><?php
-                    echo $cuotaFija[0] - $cuotaFija[0] * 0.03;
-                        ?></td>
-                        <?php } ?>
+                            echo $cuotaFija[0] - $cuotaFija[0] * 0.03;
+                            ?></td>
+                        <?php
+                        echo $cuotaFija[0] * 0.03;
+                        $objeto->crearBonificacion($id_clienteFecha, 'cuotaFija', $cuotaFija[0] * 0.03);
+                    }
+                    ?>
 
                 </tr> 
 
                 <tr>
                     <td colspan="3">Tributo 10%:</td>
                     <td colspan="<?php
-                        if ($impuestos[1] == 1) {
-                            echo 2;
-                        } else {
-                            echo 3;
-                        }
-                        ?>" id="tributo"><?php echo $ingresos * 0.10; ?></td>
+                    if ($impuestos[1] == 1) {
+                        echo 2;
+                    } else {
+                        echo 3;
+                    }
+                    ?>" id="tributo"><?php echo $ingresos * 0.10; ?></td>
                         <?php
                         // si se pago con tranfermovil descontarle un 3% y  si no esta guardado el valor calcularlo 
                         if ($impuestos[1] == 1) {
                             ?>
                         <td colspan="2" id="tributo2"><?php
-                        if ($impuestos[0] == 0)
-                            echo $ingresos * 0.10 - ($ingresos * 0.10) * 0.03;
-                        else
-                            echo $impuestos[0] - $impuestos * 0.03;
+                            if ($impuestos[0] == 0)
+                                echo $ingresos * 0.10 - ($ingresos * 0.10) * 0.03;
+                            else
+                                echo $impuestos[0] - $impuestos[0] * 0.03;
+                            $objeto->crearBonificacion($id_clienteFecha, 'impuesto10%', ($ingresos * 0.10) * 0.03);
                             ?></td>
-                        <?php } ?>
+
+                    <?php } ?>
                 </tr>
                 <?php
 //si es un mes trimestre mostrar :
@@ -219,21 +225,22 @@ and open the template in the editor.
                     <tr>
                         <td colspan="3">Fuerza trabajo 5%:</td>
                         <td colspan="<?php
-                // si se pago con trandermovil dividir el espacio en 2
-                if ($FuerzaW[1] == 1) {
-                    echo 2;
-                } else {
-                    echo 3;
-                }
-                    ?>" id="fuerzaW"><?php echo $FuerzaW[0] ?></td>
+                        // si se pago con trandermovil dividir el espacio en 2
+                        if ($FuerzaW[1] == 1) {
+                            echo 2;
+                        } else {
+                            echo 3;
+                        }
+                        ?>" id="fuerzaW"><?php echo $FuerzaW[0] ?></td>
                             <?php
                             // si se pago con tranfermovil descontarle un 3% 
                             if ($FuerzaW[1] == 1) {
                                 ?>
                             <td colspan="2" id="fuerzaW2"><?php
-                        echo $FuerzaW[0] - ($FuerzaW[0] * 0.03);
+                                echo $FuerzaW[0] - ($FuerzaW[0] * 0.03);
+                                $objeto->crearBonificacion($id_clienteFecha, 'fuerzaTrabajo', $FuerzaW[0] * 0.03);
                                 ?></td>
-                            <?php } ?>
+                        <?php } ?>
                     </tr>
                     <tr>
                         <td colspan="3">Seguridad social:</td>
@@ -243,16 +250,17 @@ and open the template in the editor.
                         } else {
                             echo 3;
                         }
-                            ?>" id="SeguridadSocial"><?php echo $SeguridadSocial[0] ?></td>
+                        ?>" id="SeguridadSocial"><?php echo $SeguridadSocial[0] ?></td>
 
                         <?php
                         // si se pago con tranfermovil descontarle un 3%  
                         if ($SeguridadSocial[1] == 1) {
                             ?>
                             <td colspan="2" id="seguridadSocial2"><?php
-                    echo $SeguridadSocial[0] - $SeguridadSocial[0] * 0.03;
-                            ?></td>
-                            <?php } ?>
+                                echo $SeguridadSocial[0] - $SeguridadSocial[0] * 0.03;
+                                $objeto->crearBonificacion($id_clienteFecha, 'seguridadSocial', ($SeguridadSocial[0] * 0.03));
+                                ?></td>
+                        <?php } ?>
 
                     </tr>
 
@@ -313,9 +321,9 @@ and open the template in the editor.
                     <td colspan="1">
 
                         <span id="labelInjusti" class=""><?php
-                        echo $gastosI;
+                            echo $gastosI;
 //                       
-                        ?></span>
+                            ?></span>
 
                     </td>
 
